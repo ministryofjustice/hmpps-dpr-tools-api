@@ -4,7 +4,9 @@
 [![Docker Repository on Quay](https://quay.io/repository/hmpps/digital-prison-reporting-mi/status "Docker Repository on Quay")](https://quay.io/repository/hmpps/digital-prison-reporting-mi)
 [![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://digital-prison-reporting-mi-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
 
-This is a skeleton project from which to create new kotlin projects from.
+This project is generated from ministryofjustice/hmpps-template-kotlin
+
+Requires Java 17 or above
 
 # Instructions
 
@@ -19,26 +21,3 @@ When deploying to a new namespace, you may wish to use this template kotlin proj
 
 Copy this folder, update all the existing namespace references, and submit a PR to the CloudPlatform team. Further instructions from the CloudPlatform team can be found here: <https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide>
 
-## Renaming from Digital Prison Reporting Mi - github Actions
-
-Once the new repository is deployed. Navigate to the repository in github, and select the `Actions` tab.
-Click the link to `Enable Actions on this repository`.
-
-Find the Action workflow named: `rename-project-create-pr` and click `Run workflow`.  This workflow will
-execute the `rename-project.bash` and create Pull Request for you to review.  Review the PR and merge.
-
-Note: ideally this workflow would run automatically however due to a recent change github Actions are not
-enabled by default on newly created repos. There is no way to enable Actions other then to click the button in the UI.
-If this situation changes we will update this project so that the workflow is triggered during the bootstrap project.
-Further reading: <https://github.community/t/workflow-isnt-enabled-in-repos-generated-from-template/136421>
-
-## Manually renaming from Digital Prison Reporting Mi
-
-Run the `rename-project.bash` and create a PR.
-
-The `rename-project.bash` script takes a single argument - the name of the project and calculates from it:
-* The main class name (project name converted to pascal case) 
-* The project description (class name with spaces between the words)
-* The main package name (project name with hyphens removed)
-
-It then performs a search and replace and directory renames so the project is ready to be used.
