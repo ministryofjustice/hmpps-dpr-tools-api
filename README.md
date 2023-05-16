@@ -4,41 +4,81 @@
 [![Docker Repository on Quay](https://quay.io/repository/hmpps/digital-prison-reporting-mi/status "Docker Repository on Quay")](https://quay.io/repository/hmpps/digital-prison-reporting-mi)
 [![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://digital-prison-reporting-mi-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
 
-This is a skeleton project from which to create new kotlin projects from.
+This project is generated from ministryofjustice/hmpps-template-kotlin
 
-# Instructions
+Requires Java 17 or above
 
-If this is a HMPPS project then the project will be created as part of bootstrapping - 
-see https://github.com/ministryofjustice/dps-project-bootstrap.
+#### CODEOWNER
 
-## Creating a CloudPlatform namespace
+- Team : [hmpps-digital-prison-reporting](https://github.com/orgs/ministryofjustice/teams/hmpps-digital-prison-reporting)
+- Email : digitalprisonreporting@digital.justice.gov.uk
 
-When deploying to a new namespace, you may wish to use this template kotlin project namespace as the basis for your new namespace:
+## Overview
 
-<https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/digital-prison-reporting-mi>
+Provides a front end for Management Information Visualisation and Presentation
 
-Copy this folder, update all the existing namespace references, and submit a PR to the CloudPlatform team. Further instructions from the CloudPlatform team can be found here: <https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide>
+## Local Development
 
-## Renaming from Digital Prison Reporting Mi - github Actions
+This project uses gradle which is bundled with the repository and also makes use
+of
 
-Once the new repository is deployed. Navigate to the repository in github, and select the `Actions` tab.
-Click the link to `Enable Actions on this repository`.
+- [micronaut](https://micronaut.io/) - for compile time dependency injection
+- [lombok](https://projectlombok.org/) - to reduce boilerplate when creating data classes
+- [jacoco](https://docs.gradle.org/current/userguide/jacoco_plugin.html) - for test coverage reports
 
-Find the Action workflow named: `rename-project-create-pr` and click `Run workflow`.  This workflow will
-execute the `rename-project.bash` and create Pull Request for you to review.  Review the PR and merge.
 
-Note: ideally this workflow would run automatically however due to a recent change github Actions are not
-enabled by default on newly created repos. There is no way to enable Actions other then to click the button in the UI.
-If this situation changes we will update this project so that the workflow is triggered during the bootstrap project.
-Further reading: <https://github.community/t/workflow-isnt-enabled-in-repos-generated-from-template/136421>
 
-## Manually renaming from Digital Prison Reporting Mi
+## Testing
 
-Run the `rename-project.bash` and create a PR.
+> **Note** - test coverage reports are enabled by default and after running the
+> tests the report will be written to build/reports/jacoco/test/html
 
-The `rename-project.bash` script takes a single argument - the name of the project and calculates from it:
-* The main class name (project name converted to pascal case) 
-* The project description (class name with spaces between the words)
-* The main package name (project name with hyphens removed)
+### Unit Tests
 
-It then performs a search and replace and directory renames so the project is ready to be used.
+The unit tests use JUnit5 and Mockito where appropriate. Use the following to
+run the tests.
+
+```
+    ./gradlew clean test
+```
+
+### Integration Tests
+
+```
+    TBD
+```
+
+### Acceptance Tests
+
+```
+    TBD
+```
+
+## Contributing
+
+Please adhere to the following guidelines when making contributions to the
+project.
+
+### Documentation
+
+- Keep all code commentary and documentation up to date
+
+### Branch Naming
+
+- Use a JIRA ticket number where available
+- Otherwise a short descriptive name is acceptable
+
+### Commit Messages
+
+- Prefix any commit messages with the JIRA ticket number where available
+- Otherwise use the prefix `NOJIRA`
+
+### Pull Requests
+
+- Reference or link any relevant JIRA tickets in the pull request notes
+- At least one approval is required before a PR can be merged
+
+## TODO
+
+- Modify the Dependabot file to suit the [dependency manager](https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#package-ecosystem) you plan to use and for [automated pull requests for package updates](https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/enabling-and-disabling-dependabot-version-updates#enabling-dependabot-version-updates). Dependabot is enabled in the settings by default.
+- Ensure as many of the [GitHub Standards](https://github.com/ministryofjustice/github-repository-standards) rules are maintained as possibly can.
