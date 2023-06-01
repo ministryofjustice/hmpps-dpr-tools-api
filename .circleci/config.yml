@@ -6,10 +6,10 @@ orbs:
 parameters:
   alerts-slack-channel:
     type: string
-    default: dps_alerts_security
+    default: dpr_cicd_alerts
   releases-slack-channel:
     type: string
-    default: dps-releases
+    default: dpr_cicd_approvals
 
 jobs:
   validate:
@@ -53,7 +53,10 @@ workflows:
           name: deploy_dev
           env: "dev"
           jira_update: true
-          context: hmpps-common-vars
+          release_name: PROJECT_NAME_ENV_NAME
+          context:
+            - hmpps-common-vars
+            - hmpps-digital-prison-reporting-mi-dev
           filters:
             branches:
               only:
@@ -72,9 +75,10 @@ workflows:
 #          env: "preprod"
 #          jira_update: true
 #          jira_env_type: staging
+#          release_name: PROJECT_NAME_ENV_NAME
 #          context:
 #            - hmpps-common-vars
-#            - digital-prison-reporting-mi-preprod
+#            - hmpps-digital-prison-reporting-mi-preprod
 #          requires:
 #            - request-preprod-approval
 #          helm_timeout: 5m
@@ -89,9 +93,10 @@ workflows:
 #          jira_env_type: production
 #          slack_notification: true
 #          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+#          release_name: PROJECT_NAME_ENV_NAME
 #          context:
 #            - hmpps-common-vars
-#            - digital-prison-reporting-mi-prod
+#            - hmpps-digital-prison-reporting-mi-prod
 #          requires:
 #            - request-prod-approval
 #          helm_timeout: 5m
