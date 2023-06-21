@@ -32,6 +32,8 @@ dependencies {
 
   // Testing
   testImplementation("com.h2database:h2:2.1.214")
+  testImplementation("io.jsonwebtoken:jjwt:0.9.1")
+  testImplementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
 }
 
 java {
