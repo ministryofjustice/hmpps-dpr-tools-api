@@ -24,6 +24,7 @@ dependencies {
 
   // Overrides to fix security vulnerabilities
   implementation("io.netty:netty-handler:4.1.94.Final")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
 
   // Testing
   testImplementation("com.h2database:h2")
