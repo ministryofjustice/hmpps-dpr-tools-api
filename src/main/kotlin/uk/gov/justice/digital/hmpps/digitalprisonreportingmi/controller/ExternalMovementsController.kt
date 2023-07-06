@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.digitalprisonreportingmi.model.Count
 import uk.gov.justice.digital.hmpps.digitalprisonreportingmi.model.ExternalMovement
+import uk.gov.justice.digital.hmpps.digitalprisonreportingmi.model.ExternalMovementFilter
+import uk.gov.justice.digital.hmpps.digitalprisonreportingmi.model.ExternalMovementFilter.DIRECTION
 import uk.gov.justice.digital.hmpps.digitalprisonreportingmi.service.ExternalMovementService
 
 @Validated
@@ -22,8 +24,10 @@ class ExternalMovementsController(val externalMovementService: ExternalMovementS
     description = "Gets a count of external movements (mocked)",
     security = [ SecurityRequirement(name = "bearer-jwt") ],
   )
-  fun stubbedCount(): Count {
-    return Count(500)
+  fun stubbedCount(
+    @RequestParam direction: String?,
+  ): Count {
+    return externalMovementService.count(createFilterMap(direction))
   }
 
   @GetMapping("/external-movements")
@@ -40,7 +44,21 @@ class ExternalMovementsController(val externalMovementService: ExternalMovementS
     pageSize: Long?,
     @RequestParam("sortColumn") sortColumn: String?,
     @RequestParam("sortedAsc") sortedAsc: Boolean?,
+    @RequestParam direction: String?,
   ): List<ExternalMovement> {
-    return externalMovementService.externalMovements(selectedPage ?: 1, pageSize ?: 10, sortColumn ?: "date", sortedAsc ?: false)
+    return externalMovementService.list(
+      selectedPage = selectedPage ?: 1,
+      pageSize = pageSize ?: 10,
+      sortColumn = sortColumn ?: "date",
+      sortedAsc = sortedAsc ?: false,
+      filters = createFilterMap(direction),
+    )
   }
+
+  private fun createFilterMap(direction: String?): Map<ExternalMovementFilter, String> =
+    buildMap {
+      if (!direction.isNullOrBlank()) {
+        put(DIRECTION, direction)
+      }
+    }
 }
