@@ -36,21 +36,21 @@ class ExternalMovementsController(val externalMovementService: ExternalMovementS
     security = [ SecurityRequirement(name = "bearer-jwt") ],
   )
   fun stubbedExternalMovements(
-    @RequestParam("selectedPage")
+    @RequestParam(defaultValue = "1")
     @Min(1)
-    selectedPage: Long?,
-    @RequestParam("pageSize")
+    selectedPage: Long,
+    @RequestParam(defaultValue = "10")
     @Min(1)
-    pageSize: Long?,
-    @RequestParam("sortColumn") sortColumn: String?,
-    @RequestParam("sortedAsc") sortedAsc: Boolean?,
+    pageSize: Long,
+    @RequestParam(defaultValue = "date") sortColumn: String,
+    @RequestParam(defaultValue = "false") sortedAsc: Boolean,
     @RequestParam direction: String?,
   ): List<ExternalMovement> {
     return externalMovementService.list(
-      selectedPage = selectedPage ?: 1,
-      pageSize = pageSize ?: 10,
-      sortColumn = sortColumn ?: "date",
-      sortedAsc = sortedAsc ?: false,
+      selectedPage = selectedPage,
+      pageSize = pageSize,
+      sortColumn = sortColumn,
+      sortedAsc = sortedAsc,
       filters = createFilterMap(direction),
     )
   }
