@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingmi.controller
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.constraints.Min
@@ -29,8 +30,12 @@ class ExternalMovementsController(val externalMovementService: ExternalMovementS
   )
   fun stubbedCount(
     @RequestParam direction: String?,
-    @RequestParam startDate: LocalDate?,
-    @RequestParam endDate: LocalDate?,
+    @Parameter(description = "The start date (inclusive) from which to filter, in the format of yyyy-mm-dd.", example = "2023-04-25")
+    @RequestParam
+    startDate: LocalDate?,
+    @Parameter(description = "The end date (inclusive) up to which to filter, in the format of yyyy-mm-dd.", example = "2023-04-25")
+    @RequestParam
+    endDate: LocalDate?,
   ): Count {
     return externalMovementService.count(createFilterMap(direction, startDate, endDate))
   }
@@ -50,8 +55,12 @@ class ExternalMovementsController(val externalMovementService: ExternalMovementS
     @RequestParam(defaultValue = "date") sortColumn: String,
     @RequestParam(defaultValue = "false") sortedAsc: Boolean,
     @RequestParam direction: String?,
-    @RequestParam startDate: LocalDate?,
-    @RequestParam endDate: LocalDate?,
+    @Parameter(description = "The start date (inclusive) from which to filter, in the format of yyyy-mm-dd.", example = "2023-04-25")
+    @RequestParam
+    startDate: LocalDate?,
+    @Parameter(description = "The end date (inclusive) up to which to filter, in the format of yyyy-mm-dd.", example = "2023-04-25")
+    @RequestParam
+    endDate: LocalDate?,
   ): List<ExternalMovement> {
     return externalMovementService.list(
       selectedPage = selectedPage,
