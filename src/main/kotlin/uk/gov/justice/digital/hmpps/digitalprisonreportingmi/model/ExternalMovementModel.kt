@@ -3,7 +3,9 @@ package uk.gov.justice.digital.hmpps.digitalprisonreportingmi.model
 import java.time.LocalDate
 import java.time.LocalTime
 
-data class ExternalMovement(
+data class ExternalMovementModel(
+  val id: Long,
+  // This is the "prisoner" column in Redshift. Keeping is as prisonNumber for not breaking the UI for now and will change in the future.
   val prisonNumber: String,
   val date: LocalDate,
   val time: LocalTime,
