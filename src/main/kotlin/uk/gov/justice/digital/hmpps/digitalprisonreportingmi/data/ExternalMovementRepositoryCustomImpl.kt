@@ -1,5 +1,7 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingmi.data
 
+import org.apache.commons.lang3.time.StopWatch
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -9,26 +11,37 @@ import java.time.LocalDate
 
 class ExternalMovementRepositoryCustomImpl : ExternalMovementRepositoryCustom {
 
+  companion object {
+    private val log = LoggerFactory.getLogger(this::class.java)
+  }
+
   private data class WhereClause(val mapSqlParameterSource: MapSqlParameterSource, val stringWhereClause: String)
 
   @Autowired
   lateinit var jdbcTemplate: NamedParameterJdbcTemplate
-  override fun list(selectedPage: Long, pageSize: Long, sortColumn: String, sortedAsc: Boolean, filters: Map<ExternalMovementFilter, Any>): List<ExternalMovementEntity> {
+  override fun list(selectedPage: Long, pageSize: Long, sortColumn: String, sortedAsc: Boolean, filters: Map<ExternalMovementFilter, Any>): List<ExternalMovementPrisonerEntity> {
     val (preparedStatementNamedParams, whereClause) = constructWhereClause(filters)
     val sortingDirection = if (sortedAsc) "asc" else "desc"
 
-    val sql = """ SELECT id, prisoner, movements.date, movements.time, to_char(movements.time, 'HH24:MI:SS') as timeOnly, direction, type, origin, destination, reason 
+    val sql = """SELECT movements.id, movements.prisoner, prisoners.firstname, prisoners.lastname, movements.date, 
+                    movements.time, to_char(movements.time, 'HH24:MI:SS') as timeOnly, movements.direction, movements.type, 
+                    movements.origin, movements.destination, movements.reason 
                     FROM datamart.domain.movements_movements as movements
-                    $whereClause 
+                    JOIN datamart.domain.prisoner_prisoner as prisoners
+                    ON movements.prisoner = prisoners.id
+                    $whereClause
                     ORDER BY $sortColumn $sortingDirection 
                     limit $pageSize OFFSET ($selectedPage - 1) * $pageSize;"""
-    return jdbcTemplate.queryForList(
+    val stopwatch = StopWatch.createStarted()
+    val externalMovementPrisonerEntities = jdbcTemplate.queryForList(
       sql,
       preparedStatementNamedParams,
     ).map { q ->
-      ExternalMovementEntity(
+      ExternalMovementPrisonerEntity(
         q["id"] as Long,
         q["prisoner"] as Long,
+        q["firstname"] as String,
+        q["lastname"] as String,
         (q["date"] as Timestamp).toLocalDateTime(),
         (q["time"] as Timestamp).toLocalDateTime(),
         q["origin"]?.let { it as String },
@@ -38,6 +51,9 @@ class ExternalMovementRepositoryCustomImpl : ExternalMovementRepositoryCustom {
         q["reason"] as String,
       )
     }
+    stopwatch.stop()
+    log.info("Query Execution time in ms: {}", stopwatch.time)
+    return externalMovementPrisonerEntities
   }
 
   override fun count(filters: Map<ExternalMovementFilter, Any>): Long {
