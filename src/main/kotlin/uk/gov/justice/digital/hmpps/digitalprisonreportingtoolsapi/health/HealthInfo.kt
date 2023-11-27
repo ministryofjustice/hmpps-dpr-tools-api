@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.digitalprisonreportingmi.health
+package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.health
 
 import org.springframework.boot.actuate.health.Health
 import org.springframework.boot.actuate.health.HealthIndicator

@@ -26,4 +26,4 @@ dpr:
     caseloads:
       host: http://localhost:9999
     user:
-      role: ROLE_PRISONS_REPORTING_USER
+      role: ROLE_PRISONS_TOOLS_USER
