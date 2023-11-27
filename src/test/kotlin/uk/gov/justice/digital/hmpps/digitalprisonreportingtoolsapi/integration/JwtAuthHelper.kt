@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.digitalprisonreportingmi.integration
+package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.integration
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm

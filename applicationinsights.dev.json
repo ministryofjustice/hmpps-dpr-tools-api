@@ -1,6 +1,6 @@
 {
   "role": {
-    "name": "hmpps-digital-prison-reporting-mi"
+    "name": "hmpps-dpr-tools-api"
   },
   "customDimensions": {
     "service.version": "${BUILD_NUMBER}"

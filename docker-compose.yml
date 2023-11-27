@@ -1,10 +1,10 @@
 version: "3"
 services:
-  hmpps-digital-prison-reporting-mi:
+  hmpps-dpr-tools-api:
     build:
       context: .
     network_mode: "host"
-    container_name: hmpps-digital-prison-reporting-mi
+    container_name: hmpps-dpr-tools-api
     ports:
       - "8081:8080"
     healthcheck:

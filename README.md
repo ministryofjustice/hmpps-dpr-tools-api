@@ -1,8 +1,8 @@
-# hmpps-digital-prison-reporting-mi
-[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-digital-prison-reporting-mi)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-digital-prison-reporting-mi "Link to report")
-[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-digital-prison-reporting-mi/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-digital-prison-reporting-mi)
-[![Docker Repository on Quay](https://quay.io/repository/hmpps/hmpps-digital-prison-reporting-mi/status "Docker Repository on Quay")](https://quay.io/repository/hmpps/hmpps-digital-prison-reporting-mi)
-[![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://hmpps-digital-prison-reporting-mi-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
+# hmpps-dpr-tools-api
+[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-dpr-tools-api)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-dpr-tools-api "Link to report")
+[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-dpr-tools-api/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-dpr-tools-api)
+[![Docker Repository on Quay](https://quay.io/repository/hmpps/hmpps-dpr-tools-api/status "Docker Repository on Quay")](https://quay.io/repository/hmpps/hmpps-dpr-tools-api)
+[![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://hmpps-dpr-tools-api-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
 
 This project is generated from ministryofjustice/hmpps-template-kotlin
 
@@ -43,7 +43,7 @@ of
 3. Add the following two environment variables on intellij run configuration
     ```HMPPS_AUTH_URL https://sign-in-dev.hmpps.service.justice.gov.uk/auth```
     <br/><br/>
-    ```AUTHORISED_ROLES ROLE_PRISONS_REPORTING_USER```
+    ```AUTHORISED_ROLES ROLE_PRISONS_TOOLS_USER```
 4. Optional: Change the org.springframework.security level to DEBUG in logback-spring.xml
 5. Run main from DigitalPrisonReportingMi
 
@@ -99,9 +99,9 @@ project.
 
 ## Deployment
 
-The app is deployed to the namespace: `hmpps-digital-prison-reporting-mi-<env>`.
+The app is deployed to the namespace: `hmpps-dpr-tools-<env>`.
 
-Config for the dev environment can be found here: https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-digital-prison-reporting-mi-dev
+Config for the dev environment can be found here: https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-dpr-tools-dev
 
 Additionally, the RedShift credentials need to be manually deployed to each environment. The file `redshift-jdbc-secret.yaml` should be updated with the base64 encoded values and applied to the environment.
 
@@ -116,5 +116,5 @@ echo -n 'placeholder' | base64
 Example of applying the secret to an environment:
 
 ```
-kubectl -n hmpps-digital-prison-reporting-mi-dev apply -f redshift-jdbc-secret.yaml
+kubectl -n hmpps-dpr-tools-dev apply -f redshift-jdbc-secret.yaml
 ```

@@ -1,16 +1,14 @@
-# Per environment values which override defaults in hmpps-digital-prison-reporting-mi/values.yaml
+# Per environment values which override defaults in hmpps-dpr-tools-api/values.yaml
 
 generic-service:
-  replicaCount: 2
-
   ingress:
-    host: digital-prison-reporting-mi-test.hmpps.service.justice.gov.uk
+    host: dpr-tools-api-test.hmpps.service.justice.gov.uk
 
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.dev.json
     REDSHIFT_JDBC_URL: jdbc:redshift://dpr-redshift-test.ctrlffniiwwc.eu-west-2.redshift.amazonaws.com:5439/datamart
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-    AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_USER
+    AUTHORISED_ROLES: ROLE_PRISONS_TOOLS_USER
     ME_CASELOADS_API_HOST: https://nomis-user-roles-api-dev.prison.service.justice.gov.uk
 
   allowlist:

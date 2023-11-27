@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.digitalprisonreportingmi
+package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
@@ -7,9 +7,9 @@ import org.springframework.context.annotation.ComponentScan
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
-@ComponentScan("uk.gov.justice.digital.hmpps.digitalprisonreportingmi", "uk.gov.justice.digital.hmpps.digitalprisonreportinglib")
-class DigitalPrisonReportingMi
+@ComponentScan("uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi", "uk.gov.justice.digital.hmpps.digitalprisonreportinglib")
+class DigitalPrisonReportingToolsApi
 
 fun main(args: Array<String>) {
-  runApplication<DigitalPrisonReportingMi>(*args)
+  runApplication<DigitalPrisonReportingToolsApi>(*args)
 }

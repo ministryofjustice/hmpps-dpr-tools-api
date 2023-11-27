@@ -1,10 +1,10 @@
 info.app:
-  name: Digital Prison Reporting Mi
+  name: Digital Prison Reporting Tools API
   version: 1.0
 
 spring:
   application:
-    name: hmpps-digital-prison-reporting-mi
+    name: hmpps-dpr-tools-api
   codec:
     max-in-memory-size: 10MB
 
@@ -74,4 +74,4 @@ dpr:
     user:
       role: ${AUTHORISED_ROLES}
     definition:
-      location: definitions.json
+      locations: unused.json
