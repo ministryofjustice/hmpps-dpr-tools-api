@@ -11,7 +11,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.V
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Dataset
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Datasource
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.FilterDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.FilterOption
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.StaticFilterOption
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.FilterType
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.MetaData
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ParameterType
@@ -79,9 +79,9 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
               name = "30",
               display = "51",
               wordWrap = WordWrap.None,
-              filter = FilterDefinition(type = FilterType.Radio, listOf(FilterOption("70", "71"))),
+              filter = FilterDefinition(type = FilterType.Radio, listOf(StaticFilterOption("70", "71"))),
               sortable = true,
-              defaultsort = false,
+              defaultSort = false,
               formula = "52",
               visible = true,
             ),
@@ -93,7 +93,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       Policy(
         id = "60",
         type = "61",
-        rules = emptyList(),
+        rule = emptyList(),
       ),
     ),
   )
