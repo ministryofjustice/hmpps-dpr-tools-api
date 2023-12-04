@@ -14,12 +14,12 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data.InMemory
 
 @RestController
 @Tag(name = "Report Definition API")
-class DefinitionsController(val repository: InMemoryProductDefinitionRepository) {
+class DefinitionController(val repository: InMemoryProductDefinitionRepository) {
   @Operation(
     description = "Saves a definition",
     security = [SecurityRequirement(name = "bearer-jwt")],
   )
-  @PutMapping("/definitions")
+  @PutMapping("/definition")
   fun putDefinition(
     @RequestBody
     @Valid
@@ -32,7 +32,7 @@ class DefinitionsController(val repository: InMemoryProductDefinitionRepository)
     description = "Deletes a definition",
     security = [ SecurityRequirement(name = "bearer-jwt") ],
   )
-  @DeleteMapping("/definitions/{definitionId}")
+  @DeleteMapping("/definition/{definitionId}")
   fun deleteDefinition(@PathVariable definitionId: String) {
     repository.deleteById(definitionId)
   }
