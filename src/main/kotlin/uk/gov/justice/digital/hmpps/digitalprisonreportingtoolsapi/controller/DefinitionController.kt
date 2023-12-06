@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data.InMemoryProductDefinitionRepository
+import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.DefinitionService
 
 @RestController
 @Tag(name = "Report Definition API")
-class DefinitionController(val repository: InMemoryProductDefinitionRepository) {
+class DefinitionController(val definitionService: DefinitionService) {
   @Operation(
     description = "Saves a definition",
     security = [SecurityRequirement(name = "bearer-jwt")],
@@ -25,7 +25,7 @@ class DefinitionController(val repository: InMemoryProductDefinitionRepository) 
     @Valid
     definition: ProductDefinition,
   ) {
-    repository.save(definition)
+    definitionService.validateAndSave(definition)
   }
 
   @Operation(
@@ -34,6 +34,6 @@ class DefinitionController(val repository: InMemoryProductDefinitionRepository) 
   )
   @DeleteMapping("/definition/{definitionId}")
   fun deleteDefinition(@PathVariable definitionId: String) {
-    repository.deleteById(definitionId)
+    definitionService.deleteById(definitionId)
   }
 }

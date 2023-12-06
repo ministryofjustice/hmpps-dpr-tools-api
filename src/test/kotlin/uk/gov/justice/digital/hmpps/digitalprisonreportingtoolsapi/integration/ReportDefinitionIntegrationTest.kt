@@ -182,12 +182,141 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
   }
 
   @Test
-  fun `Invalid definition is rejected`() {
+  fun `Empty definition is rejected`() {
     webTestClient.put()
       .uri("/definition")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue("{}")
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+  }
+
+  @Test
+  fun `Definition with invalid dataset reference is rejected`() {
+    webTestClient.put()
+      .uri("/definition")
+      .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(
+        """
+          {
+            "id": "people",
+            "name": "People",
+            "description": "Reports about people",
+            "metadata": {
+              "author": "Stu",
+              "owner": "Stu",
+              "version": "1.0.0"
+            },
+            "datasource": [
+              {
+                "id": "redshift",
+                "name": "redshift"
+              }
+            ],
+            "dataset": [
+              {
+                "id": "people",
+                "name": "All",
+                "datasource": "redshift",
+                "query": "SELECT prisoners.number AS prisonNumber, prisoners.lastname, prisoners.firstname FROM datamart.domain.prisoner_prisoner AS prisoners",
+                "schema": {
+                  "field": []
+                }
+              }
+            ],
+            "policy": [],
+            "report": [
+              {
+                "id": "everyone",
+                "name": "Everyone",
+                "description": "EVERYONE",
+                "created": "2023-12-04T14:41:00.000Z",
+                "classification": "OFFICIAL",
+                "version": "1.2.3",
+                "render": "HTML",
+                "dataset": "invalid",
+                "specification": {
+                  "template": "list",
+                  "field": []
+                }
+              }
+            ]
+          }
+
+        """.trimIndent(),
+      )
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+  }
+
+  @Test
+  fun `Definition with invalid field reference is rejected`() {
+    webTestClient.put()
+      .uri("/definition")
+      .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(
+        """
+          {
+            "id": "people",
+            "name": "People",
+            "description": "Reports about people",
+            "metadata": {
+              "author": "Stu",
+              "owner": "Stu",
+              "version": "1.0.0"
+            },
+            "datasource": [
+              {
+                "id": "redshift",
+                "name": "redshift"
+              }
+            ],
+            "dataset": [
+              {
+                "id": "people",
+                "name": "All",
+                "datasource": "redshift",
+                "query": "SELECT prisoners.number AS prisonNumber, prisoners.lastname, prisoners.firstname FROM datamart.domain.prisoner_prisoner AS prisoners",
+                "schema": {
+                  "field": []
+                }
+              }
+            ],
+            "policy": [],
+            "report": [
+              {
+                "id": "everyone",
+                "name": "Everyone",
+                "description": "EVERYONE",
+                "created": "2023-12-04T14:41:00.000Z",
+                "classification": "OFFICIAL",
+                "version": "1.2.3",
+                "render": "HTML",
+                "dataset": "people",
+                "specification": {
+                  "template": "list",
+                  "field": [
+                  {
+                    "name": "prisonNumber",
+                    "display": "Prison Number",
+                    "formula": "",
+                    "visible": true,
+                    "sortable": true,
+                    "defaultsort": true
+                  }
+                ]
+                }
+              }
+            ]
+          }
+
+        """.trimIndent(),
+      )
       .exchange()
       .expectStatus()
       .isBadRequest
