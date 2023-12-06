@@ -24,13 +24,13 @@ class DefinitionService(
       mapper.map(definition, RenderMethod.HTML, 1, caseLoads)
 
       // Check each query executes successfully
-      definition.dataset.forEach {
+      definition.dataset.forEach { dataset ->
         dataRepository.count(
           reportId = definition.id,
           filters = emptyList(),
-          caseloadFields = emptyList(),
-          query = it.query,
-          userCaseloads = emptyList(),
+          caseloadFields = dataset.schema.field.filter { it.caseload }.map { it.name },
+          query = dataset.query,
+          userCaseloads = caseLoads,
         )
       }
     } catch (e: Exception) {
