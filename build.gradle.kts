@@ -16,6 +16,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("com.amazon.redshift:redshift-jdbc4-no-awssdk:1.2.45.1069")
   implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:1.1.4")
+  implementation("com.google.code.gson:gson:2.10.1")
 
   // Security
   implementation("org.springframework.boot:spring-boot-starter-security")
