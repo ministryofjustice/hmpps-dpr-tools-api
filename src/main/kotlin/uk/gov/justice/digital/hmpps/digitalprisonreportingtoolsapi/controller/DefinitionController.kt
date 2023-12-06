@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.AuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.DefinitionService
 
 @RestController
@@ -25,8 +26,9 @@ class DefinitionController(val definitionService: DefinitionService) {
     @Valid
     definition: ProductDefinition,
     @PathVariable definitionId: String,
+    authentication: AuthAwareAuthenticationToken,
   ) {
-    definitionService.validateAndSave(definition)
+    definitionService.validateAndSave(definition, authentication.getCaseLoads())
   }
 
   @Operation(

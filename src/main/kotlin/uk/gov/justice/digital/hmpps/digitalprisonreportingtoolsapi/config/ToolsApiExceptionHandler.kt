@@ -26,6 +26,7 @@ class ToolsApiExceptionHandler {
 
   private fun respondWithBadRequest(e: Exception): ResponseEntity<ErrorResponse> {
     log.info("Validation exception: {}", e.message)
+    log.info("Cause: {}", e.cause?.message)
     return ResponseEntity
       .status(BAD_REQUEST)
       .body(
