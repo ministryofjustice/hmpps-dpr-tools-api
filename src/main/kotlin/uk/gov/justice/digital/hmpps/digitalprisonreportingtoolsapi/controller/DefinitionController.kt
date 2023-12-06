@@ -10,22 +10,25 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data.InMemoryProductDefinitionRepository
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.AuthAwareAuthenticationToken
+import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.DefinitionService
 
 @RestController
 @Tag(name = "Report Definition API")
-class DefinitionsController(val repository: InMemoryProductDefinitionRepository) {
+class DefinitionController(val definitionService: DefinitionService) {
   @Operation(
     description = "Saves a definition",
     security = [SecurityRequirement(name = "bearer-jwt")],
   )
-  @PutMapping("/definitions")
+  @PutMapping("/definitions/{definitionId}")
   fun putDefinition(
     @RequestBody
     @Valid
     definition: ProductDefinition,
+    @PathVariable definitionId: String,
+    authentication: AuthAwareAuthenticationToken,
   ) {
-    repository.save(definition)
+    definitionService.validateAndSave(definition, authentication.getCaseLoads())
   }
 
   @Operation(
@@ -34,6 +37,6 @@ class DefinitionsController(val repository: InMemoryProductDefinitionRepository)
   )
   @DeleteMapping("/definitions/{definitionId}")
   fun deleteDefinition(@PathVariable definitionId: String) {
-    repository.deleteById(definitionId)
+    definitionService.deleteById(definitionId)
   }
 }

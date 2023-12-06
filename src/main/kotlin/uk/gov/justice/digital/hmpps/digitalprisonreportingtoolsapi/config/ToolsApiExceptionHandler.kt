@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.InvalidDefinitionException
 
 @RestControllerAdvice
 class ToolsApiExceptionHandler {
@@ -17,8 +18,15 @@ class ToolsApiExceptionHandler {
     return respondWithBadRequest(e)
   }
 
+  @ExceptionHandler(InvalidDefinitionException::class)
+  @ResponseStatus(BAD_REQUEST)
+  fun handleInvalidDefinitionException(e: Exception): ResponseEntity<ErrorResponse> {
+    return respondWithBadRequest(e)
+  }
+
   private fun respondWithBadRequest(e: Exception): ResponseEntity<ErrorResponse> {
     log.info("Validation exception: {}", e.message)
+    log.info("Cause: {}", e.cause?.message)
     return ResponseEntity
       .status(BAD_REQUEST)
       .body(

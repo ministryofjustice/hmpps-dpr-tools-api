@@ -43,7 +43,7 @@ of
 3. Add the following two environment variables on intellij run configuration
     ```HMPPS_AUTH_URL https://sign-in-dev.hmpps.service.justice.gov.uk/auth```
     <br/><br/>
-    ```AUTHORISED_ROLES ROLE_PRISONS_TOOLS_USER```
+    ```AUTHORISED_ROLES ROLE_PRISONS_REPORTING_TOOLS_USER```
 4. Optional: Change the org.springframework.security level to DEBUG in logback-spring.xml
 5. Run main from DigitalPrisonReportingMi
 
