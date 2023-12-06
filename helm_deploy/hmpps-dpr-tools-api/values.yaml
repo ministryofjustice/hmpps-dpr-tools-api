@@ -1,7 +1,7 @@
 generic-service:
   nameOverride: hmpps-dpr-tools-api
 
-  replicaCount: 2
+  replicaCount: 1
 
   image:
     repository: quay.io/hmpps/hmpps-dpr-tools-api
