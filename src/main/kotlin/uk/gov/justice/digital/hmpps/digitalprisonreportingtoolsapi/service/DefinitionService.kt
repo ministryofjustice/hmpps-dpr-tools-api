@@ -10,10 +10,10 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.Inv
 
 @Service
 class DefinitionService(
-  val repository: InMemoryProductDefinitionRepository,
-  val dataRepository: ConfiguredApiRepository,
-  val mapper: ReportDefinitionMapper,
+  private val repository: InMemoryProductDefinitionRepository,
+  private val dataRepository: ConfiguredApiRepository,
 ) {
+  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository))
 
   fun validateAndSave(
     definition: ProductDefinition,
