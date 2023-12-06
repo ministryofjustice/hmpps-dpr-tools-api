@@ -14,8 +14,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.S
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.VariantDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.config.ErrorResponse
 
-
-class ReportDefinitionIntegrationTest: IntegrationTestBase() {
+class ReportDefinitionIntegrationTest : IntegrationTestBase() {
 
   @Autowired
   lateinit var gson: Gson

@@ -6,8 +6,8 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.Configured
 
 class FakeConfiguredApiService(
   override val productDefinitionRepository: ProductDefinitionRepository,
-  override val configuredApiRepository: ConfiguredApiRepository
-  ) : ConfiguredApiService(productDefinitionRepository, configuredApiRepository) {
+  override val configuredApiRepository: ConfiguredApiRepository,
+) : ConfiguredApiService(productDefinitionRepository, configuredApiRepository) {
 
   override fun validateAndFetchData(
     reportId: String,
@@ -19,7 +19,7 @@ class FakeConfiguredApiService(
     sortedAsc: Boolean,
     userCaseloads: List<String>,
     reportFieldId: String?,
-    prefix: String?
+    prefix: String?,
   ): List<Map<String, Any>> {
     return emptyList()
   }

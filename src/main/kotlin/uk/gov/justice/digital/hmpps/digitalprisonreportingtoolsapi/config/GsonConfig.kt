@@ -16,7 +16,7 @@ class GsonConfig {
   @Bean
   fun deserialiser(): Gson = GsonBuilder()
     .registerTypeAdapter(LocalDate::class.java, IsoLocalDateTypeAdaptor())
-    .registerTypeAdapter(FilterType::class.java,  FilterTypeDeserializer())
+    .registerTypeAdapter(FilterType::class.java, FilterTypeDeserializer())
     .registerTypeAdapter(ParameterType::class.java, SchemaFieldTypeDeserializer())
     .create()
 }
