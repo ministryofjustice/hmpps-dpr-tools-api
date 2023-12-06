@@ -19,11 +19,12 @@ class DefinitionController(val definitionService: DefinitionService) {
     description = "Saves a definition",
     security = [SecurityRequirement(name = "bearer-jwt")],
   )
-  @PutMapping("/definition")
+  @PutMapping("/definitions/{definitionId}")
   fun putDefinition(
     @RequestBody
     @Valid
     definition: ProductDefinition,
+    @PathVariable definitionId: String,
   ) {
     definitionService.validateAndSave(definition)
   }
@@ -32,7 +33,7 @@ class DefinitionController(val definitionService: DefinitionService) {
     description = "Deletes a definition",
     security = [ SecurityRequirement(name = "bearer-jwt") ],
   )
-  @DeleteMapping("/definition/{definitionId}")
+  @DeleteMapping("/definitions/{definitionId}")
   fun deleteDefinition(@PathVariable definitionId: String) {
     definitionService.deleteById(definitionId)
   }

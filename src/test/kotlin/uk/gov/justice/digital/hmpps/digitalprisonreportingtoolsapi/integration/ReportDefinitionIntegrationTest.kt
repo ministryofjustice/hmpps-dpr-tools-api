@@ -101,7 +101,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
   @Test
   fun `Valid definition is saved and is presented by list endpoint`() {
     webTestClient.put()
-      .uri("/definition")
+      .uri("/definitions/1")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .bodyValue(productDefinition)
       .exchange()
@@ -134,7 +134,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
   @Test
   fun `Valid definition is saved and is presented by definition endpoint`() {
     webTestClient.put()
-      .uri("/definition")
+      .uri("/definitions/1")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .bodyValue(productDefinition)
       .exchange()
@@ -184,7 +184,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
   @Test
   fun `Empty definition is rejected`() {
     webTestClient.put()
-      .uri("/definition")
+      .uri("/definitions/1")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue("{}")
@@ -196,7 +196,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
   @Test
   fun `Definition with invalid dataset reference is rejected`() {
     webTestClient.put()
-      .uri("/definition")
+      .uri("/definitions/people")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(
@@ -256,7 +256,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
   @Test
   fun `Definition with invalid field reference is rejected`() {
     webTestClient.put()
-      .uri("/definition")
+      .uri("/definitions/people")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(
@@ -325,7 +325,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
   @Test
   fun `Definition is deleted`() {
     webTestClient.put()
-      .uri("/definition")
+      .uri("/definitions/1")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .bodyValue(productDefinition)
       .exchange()
@@ -333,7 +333,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       .isOk
 
     webTestClient.delete()
-      .uri("/definition/1")
+      .uri("/definitions/1")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .exchange()
       .expectStatus()
