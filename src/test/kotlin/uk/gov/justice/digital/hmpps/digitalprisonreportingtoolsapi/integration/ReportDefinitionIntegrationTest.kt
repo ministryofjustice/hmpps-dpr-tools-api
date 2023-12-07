@@ -1,7 +1,10 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.integration
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.expectBodyList
 import org.springframework.test.web.reactive.server.returnResult
@@ -9,121 +12,123 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.F
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.ReportDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.SingleVariantReportDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.VariantDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Dataset
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Datasource
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.FilterDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.FilterType
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.MetaData
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ParameterType
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Policy
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.RenderMethod
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Report
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ReportField
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Schema
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.SchemaField
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Specification
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.StaticFilterOption
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.WordWrap
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.config.ErrorResponse
-import java.time.LocalDate
 
 class ReportDefinitionIntegrationTest : IntegrationTestBase() {
 
-  val productDefinition = ProductDefinition(
-    id = "1",
-    name = "2",
-    description = "3",
-    metadata = MetaData(
-      author = "4",
-      version = "5",
-      owner = "6",
-      purpose = "7",
-      profile = "8",
-      dqri = "9",
-    ),
-    datasource = listOf(
-      Datasource(
-        id = "10",
-        name = "11",
-      ),
-    ),
-    dataset = listOf(
-      Dataset(
-        id = "20",
-        name = "21",
-        query = "SELECT 1",
-        schema = Schema(
-          field = listOf(
-            SchemaField(
-              name = "30",
-              type = ParameterType.String,
-              caseload = false,
-            ),
-          ),
-        ),
-      ),
-    ),
-    report = listOf(
-      Report(
-        id = "40",
-        name = "41",
-        description = "42",
-        created = LocalDate.now(),
-        dataset = "\$ref:20",
-        policy = listOf("\$ref:60"),
-        render = RenderMethod.HTML,
-        version = "43",
-        specification = Specification(
-          template = "list",
-          field = listOf(
-            ReportField(
-              name = "30",
-              display = "51",
-              wordWrap = WordWrap.None,
-              filter = FilterDefinition(type = FilterType.Radio, listOf(StaticFilterOption("70", "71"))),
-              sortable = true,
-              defaultSort = false,
-              formula = "52",
-              visible = true,
-            ),
-          ),
-        ),
-      ),
-    ),
-    policy = listOf(
-      Policy(
-        id = "60",
-        type = "61",
-        rule = emptyList(),
-      ),
-    ),
-  )
+  @Autowired
+  lateinit var gson: Gson
+
+  val productDefinition =
+    """
+      {
+      "id": "1",
+      "name": "2",
+      "description": "3",
+      "metadata": {
+        "author": "4",
+        "version": "5",
+        "owner": "6",
+        "purpose": "7",
+        "profile": "8",
+        "dqri": "9"
+      },
+      "datasource": [
+        {
+          "id": "10",
+          "name": "11"
+        }
+      ],
+      "dataset": [
+        {
+          "id": "20",
+          "name": "21",
+          "query": "SELECT '70' AS F30",
+          "schema": {
+          "field": [
+            {
+              "name": "F30",
+              "type": "string",
+              "caseload": false
+            }
+          ]
+        }
+      }
+      ],
+      "report": [
+        {
+          "id": "40",
+          "name": "41",
+          "description": "42",
+          "created": "2023-12-07T09:21:00.000Z",
+          "version": "43",
+          "dataset": "20",
+          "policy": [
+            "60"
+          ],
+          "render": "HTML",
+          "specification": {
+            "template": "list",
+            "field": [
+              {
+                "name": "F30",
+                "display": "51",
+                "wordWrap": "None",
+                "filter": {
+                  "type": "Radio",
+                  "dynamicoptions": {
+                    "minimumLength": 2,
+                    "returnAsStaticOptions": true
+                   }
+                },
+                "sortable": true,
+                "defaultsort": false,
+                "formula": "52",
+                "visible": true
+              }
+            ]
+          },
+          "destination": []
+        }
+      ],
+      "policy": [
+        {
+          "id": "60",
+          "type": "61",
+          "rule": []
+        }
+      ]
+    }
+    """.trimIndent()
 
   @Test
   fun `Valid definition is saved and is presented by list endpoint`() {
     webTestClient.put()
       .uri("/definitions/1")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(productDefinition)
       .exchange()
       .expectStatus()
       .isOk
 
-    val result = webTestClient.get()
+    val body = webTestClient.get()
       .uri("/definitions")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .exchange()
       .expectStatus()
       .isOk
-      .expectBodyList<ReportDefinition>()
+      .expectBody(String::class.java)
       .returnResult()
+      .responseBody
 
-    assertThat(result.responseBody).isNotNull
-    assertThat(result.responseBody).hasSize(1)
-    assertThat(result.responseBody).first().isNotNull
+    val result = gson.fromJson<List<ReportDefinition>>(body, object : TypeToken<ArrayList<ReportDefinition?>?>() {}.getType())
 
-    val definition = result.responseBody!!.first()
+    assertThat(result).isNotNull
+    assertThat(result).hasSize(1)
+    assertThat(result).first().isNotNull
+
+    val definition = result!!.first()
 
     assertThat(definition.name).isEqualTo("2")
     assertThat(definition.description).isEqualTo("3")
@@ -138,6 +143,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
     webTestClient.put()
       .uri("/definitions/1")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(productDefinition)
       .exchange()
       .expectStatus()
@@ -145,15 +151,17 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       .expectBodyList<ReportDefinition>()
       .returnResult()
 
-    val result = webTestClient.get()
+    val body = webTestClient.get()
       .uri("/definitions/1/40")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .exchange()
       .expectStatus()
       .isOk
-      .expectBody(SingleVariantReportDefinition::class.java)
+      .expectBody(String::class.java)
       .returnResult()
-      .responseBody!!
+      .responseBody
+
+    val result = gson.fromJson(body, SingleVariantReportDefinition::class.java)
 
     assertThat(result.name).isEqualTo("2")
     assertThat(result.description).isEqualTo("3")
@@ -172,7 +180,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
 
     val field = variant.specification!!.fields[0]
 
-    assertThat(field.name).isEqualTo("30")
+    assertThat(field.name).isEqualTo("F30")
     assertThat(field.display).isEqualTo("51")
     assertThat(field.sortable).isEqualTo(true)
     assertThat(field.defaultsort).isEqualTo(false)
@@ -405,10 +413,41 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
   }
 
   @Test
+  fun `Property with GSON deserialisation annotations is deserialised correctly`() {
+    webTestClient.put()
+      .uri("/definitions/1")
+      .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(productDefinition)
+      .exchange()
+      .expectStatus()
+      .isOk
+
+    val body = webTestClient.get()
+      .uri("/definitions/1/40")
+      .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectBody(String::class.java)
+      .returnResult()
+      .responseBody
+
+    val result = gson.fromJson(body, SingleVariantReportDefinition::class.java)
+
+    val field = result!!.variant.specification!!.fields[0]
+
+    assertThat(field.defaultsort).isFalse()
+    assertThat(field.filter!!.dynamicOptions!!.returnAsStaticOptions).isTrue()
+    assertThat(field.filter!!.staticOptions!![0].name).isEqualTo("70")
+  }
+
+  @Test
   fun `Definition is deleted`() {
     webTestClient.put()
       .uri("/definitions/1")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(productDefinition)
       .exchange()
       .expectStatus()
