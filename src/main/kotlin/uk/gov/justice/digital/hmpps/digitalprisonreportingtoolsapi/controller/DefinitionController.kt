@@ -17,8 +17,8 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.Defin
 @Tag(name = "Report Definition API")
 class DefinitionController(
   val definitionService: DefinitionService,
-  val gson: Gson
-  ) {
+  val gson: Gson,
+) {
   @Operation(
     description = "Saves a definition",
     security = [SecurityRequirement(name = "bearer-jwt")],
