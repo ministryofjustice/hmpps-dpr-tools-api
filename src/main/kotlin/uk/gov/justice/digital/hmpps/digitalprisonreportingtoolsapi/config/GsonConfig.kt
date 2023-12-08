@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.config
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.google.gson.*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.FilterTypeDeserializer
