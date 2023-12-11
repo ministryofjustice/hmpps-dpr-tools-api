@@ -31,10 +31,6 @@ spring:
         jwt:
           jwk-set-uri: ${hmpps.auth.url}/.well-known/jwks.json
 
-  mvc:
-    converters:
-      preferred-json-mapper: gson
-
 server:
   port: 8080
   servlet:
