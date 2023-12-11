@@ -1,10 +1,7 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.integration
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.expectBodyList
 import org.springframework.test.web.reactive.server.returnResult
@@ -15,9 +12,6 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.V
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.config.ErrorResponse
 
 class ReportDefinitionIntegrationTest : IntegrationTestBase() {
-
-  @Autowired
-  lateinit var gson: Gson
 
   val productDefinition =
     """
@@ -112,23 +106,18 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       .expectStatus()
       .isOk
 
-    val body = webTestClient.get()
+    val result = webTestClient.get()
       .uri("/definitions")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .exchange()
       .expectStatus()
       .isOk
-      .expectBody(String::class.java)
+      .expectBodyList<ReportDefinition>()
       .returnResult()
-      .responseBody
+      .responseBody!!
 
-    val result = gson.fromJson<List<ReportDefinition>>(body, object : TypeToken<ArrayList<ReportDefinition?>?>() {}.getType())
-
-    assertThat(result).isNotNull
-    assertThat(result).hasSize(1)
-    assertThat(result).first().isNotNull
-
-    val definition = result!!.first()
+    assertThat(result).hasSizeGreaterThan(0)
+    val definition = result.findLast { it.id == "1" }!!
 
     assertThat(definition.name).isEqualTo("2")
     assertThat(definition.description).isEqualTo("3")
@@ -151,17 +140,15 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       .expectBodyList<ReportDefinition>()
       .returnResult()
 
-    val body = webTestClient.get()
+    val result = webTestClient.get()
       .uri("/definitions/1/40")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .exchange()
       .expectStatus()
       .isOk
-      .expectBody(String::class.java)
+      .expectBody(SingleVariantReportDefinition::class.java)
       .returnResult()
-      .responseBody
-
-    val result = gson.fromJson(body, SingleVariantReportDefinition::class.java)
+      .responseBody!!
 
     assertThat(result.name).isEqualTo("2")
     assertThat(result.description).isEqualTo("3")
@@ -413,6 +400,97 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
   }
 
   @Test
+  fun `Definition with date range filter is returned correctly`() {
+    webTestClient.put()
+      .uri("/definitions/people")
+      .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(
+        """
+          {
+            "id": "people",
+            "name": "People",
+            "description": "Reports about people",
+            "metadata": {
+              "author": "Stu",
+              "owner": "Stu",
+              "version": "1.0.0"
+            },
+            "datasource": [
+              {
+                "id": "redshift",
+                "name": "redshift"
+              }
+            ],
+            "dataset": [
+              {
+                "id": "people",
+                "name": "All",
+                "datasource": "redshift",
+                "query": "SELECT 1",
+                "schema": {
+                  "field": [
+                    {
+                      "name": "date",
+                      "type": "date",
+                      "display": ""
+                    }
+                  ]
+                }
+              }
+            ],
+            "policy": [],
+            "report": [
+              {
+                "id": "everyone",
+                "name": "Everyone",
+                "description": "EVERYONE",
+                "created": "2023-12-04T14:41:00.000Z",
+                "classification": "OFFICIAL",
+                "version": "1.2.3",
+                "render": "HTML",
+                "dataset": "people",
+                "specification": {
+                  "template": "list",
+                  "field": [
+                    {
+                      "name": "date",
+                      "display": "Date",
+                      "formula": "",
+                      "visible": true,
+                      "sortable": true,
+                      "defaultsort": true,
+                      "filter" : {
+                          "type": "daterange"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+
+        """.trimIndent(),
+      )
+      .exchange()
+      .expectStatus()
+      .isOk
+
+    val body = webTestClient.get()
+      .uri("/definitions/people/everyone")
+      .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectBody(String::class.java)
+      .returnResult()
+      .responseBody
+
+    assertThat(body).contains("\"type\":\"date\"")
+    assertThat(body).contains("\"type\":\"daterange\"")
+  }
+
+  @Test
   fun `Property with GSON deserialisation annotations is deserialised correctly`() {
     webTestClient.put()
       .uri("/definitions/1")
@@ -423,21 +501,20 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       .expectStatus()
       .isOk
 
-    val body = webTestClient.get()
+    val result = webTestClient.get()
       .uri("/definitions/1/40")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .exchange()
       .expectStatus()
       .isOk
-      .expectBody(String::class.java)
+      .expectBody(SingleVariantReportDefinition::class.java)
       .returnResult()
       .responseBody
-
-    val result = gson.fromJson(body, SingleVariantReportDefinition::class.java)
 
     val field = result!!.variant.specification!!.fields[0]
 
     assertThat(field.defaultsort).isFalse()
+    assertThat(field.filter).isNotNull()
     assertThat(field.filter!!.dynamicOptions!!.returnAsStaticOptions).isTrue()
     assertThat(field.filter!!.staticOptions!![0].name).isEqualTo("70")
   }
@@ -460,16 +537,11 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       .expectStatus()
       .isOk
 
-    val result = webTestClient.get()
-      .uri("/definitions")
+    webTestClient.get()
+      .uri("/definitions/1/40")
       .headers(setAuthorisation(roles = listOf(authorisedRole)))
       .exchange()
       .expectStatus()
-      .isOk
-      .expectBodyList<ReportDefinition>()
-      .returnResult()
-
-    assertThat(result.responseBody).isNotNull
-    assertThat(result.responseBody).hasSize(0)
+      .isNotFound
   }
 }

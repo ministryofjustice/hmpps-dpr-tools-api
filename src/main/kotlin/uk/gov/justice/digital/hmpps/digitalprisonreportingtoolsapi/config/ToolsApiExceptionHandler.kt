@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.BAD_REQUEST
+import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.DefinitionNotFoundException
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.InvalidDefinitionException
 
 @RestControllerAdvice
@@ -22,6 +24,20 @@ class ToolsApiExceptionHandler {
   @ResponseStatus(BAD_REQUEST)
   fun handleInvalidDefinitionException(e: Exception): ResponseEntity<ErrorResponse> {
     return respondWithBadRequest(e)
+  }
+
+  @ExceptionHandler(DefinitionNotFoundException::class)
+  @ResponseStatus(NOT_FOUND)
+  fun handleDefinitionNotFoundException(e: Exception): ResponseEntity<ErrorResponse> {
+    return ResponseEntity
+      .status(NOT_FOUND)
+      .body(
+        ErrorResponse(
+          status = NOT_FOUND,
+          userMessage = e.message,
+          developerMessage = e.message,
+        ),
+      )
   }
 
   private fun respondWithBadRequest(e: Exception): ResponseEntity<ErrorResponse> {
