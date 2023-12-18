@@ -30,7 +30,7 @@ class DefinitionService(
           reportId = definition.id,
           filters = emptyList(),
           query = dataset.query,
-          policyEngineResult = "FALSE"
+          policyEngineResult = "FALSE",
         )
       }
     } catch (e: Exception) {
