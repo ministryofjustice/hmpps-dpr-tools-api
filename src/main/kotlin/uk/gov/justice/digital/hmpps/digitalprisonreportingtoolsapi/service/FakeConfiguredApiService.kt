@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service
 
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ProductDefinitionRepository
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ConfiguredApiService
 
 class FakeConfiguredApiService(
@@ -17,7 +18,7 @@ class FakeConfiguredApiService(
     pageSize: Long,
     sortColumn: String?,
     sortedAsc: Boolean,
-    userCaseloads: List<String>,
+    userToken: DprAuthAwareAuthenticationToken?,
     reportFieldId: String?,
     prefix: String?,
   ): List<Map<String, Any>> {

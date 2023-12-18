@@ -57,9 +57,6 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
           "created": "2023-12-07T09:21:00.000Z",
           "version": "43",
           "dataset": "20",
-          "policy": [
-            "60"
-          ],
           "render": "HTML",
           "specification": {
             "template": "list",
@@ -89,6 +86,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
         {
           "id": "60",
           "type": "61",
+          "action": ["TRUE"],
           "rule": []
         }
       ]
@@ -224,7 +222,14 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 }
               }
             ],
-            "policy": [],
+            "policy": [
+              {
+                "id": "60",
+                "type": "61",
+                "action": ["TRUE"],
+                "rule": []
+              }
+            ],
             "report": [
               {
                 "id": "everyone",
@@ -284,7 +289,14 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 }
               }
             ],
-            "policy": [],
+            "policy": [
+              {
+                "id": "60",
+                "type": "61",
+                "action": ["TRUE"],
+                "rule": []
+              }
+            ],
             "report": [
               {
                 "id": "everyone",
@@ -359,7 +371,14 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 }
               }
             ],
-            "policy": [],
+            "policy": [
+              {
+                "id": "60",
+                "type": "61",
+                "action": ["TRUE"],
+                "rule": []
+              }
+            ],
             "report": [
               {
                 "id": "everyone",
@@ -439,7 +458,14 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 }
               }
             ],
-            "policy": [],
+            "policy": [
+              {
+                "id": "60",
+                "type": "61",
+                "action": ["TRUE"],
+                "rule": []
+              }
+            ],
             "report": [
               {
                 "id": "everyone",

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.AuthAwareAuthenticationToken
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.DefinitionService
 
 @RestController
@@ -28,11 +28,11 @@ class DefinitionController(
     @RequestBody
     body: String,
     @PathVariable definitionId: String,
-    authentication: AuthAwareAuthenticationToken,
+    authentication: DprAuthAwareAuthenticationToken,
   ) {
     val definition = gson.fromJson(body, ProductDefinition::class.java)
 
-    definitionService.validateAndSave(definition, authentication.getCaseLoads())
+    definitionService.validateAndSave(definition, authentication)
   }
 
   @Operation(
