@@ -85,7 +85,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       "policy": [
         {
           "id": "60",
-          "type": "61",
+          "type": "row-level",
           "action": ["TRUE"],
           "rule": []
         }
@@ -225,7 +225,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
             "policy": [
               {
                 "id": "60",
-                "type": "61",
+                "type": "row-level",
                 "action": ["TRUE"],
                 "rule": []
               }
@@ -292,7 +292,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
             "policy": [
               {
                 "id": "60",
-                "type": "61",
+                "type": "row-level",
                 "action": ["TRUE"],
                 "rule": []
               }
@@ -374,7 +374,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
             "policy": [
               {
                 "id": "60",
-                "type": "61",
+                "type": "row-level",
                 "action": ["TRUE"],
                 "rule": []
               }
@@ -461,7 +461,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
             "policy": [
               {
                 "id": "60",
-                "type": "61",
+                "type": "row-level",
                 "action": ["TRUE"],
                 "rule": []
               }
