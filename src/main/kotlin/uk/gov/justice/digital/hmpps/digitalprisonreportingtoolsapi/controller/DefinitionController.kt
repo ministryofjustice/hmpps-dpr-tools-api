@@ -17,7 +17,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.Defin
 @Tag(name = "Report Definition API")
 class DefinitionController(
   val definitionService: DefinitionService,
-  val gson: Gson,
+  val dprDefinitionGson: Gson,
 ) {
   @Operation(
     description = "Saves a definition",
@@ -30,7 +30,7 @@ class DefinitionController(
     @PathVariable definitionId: String,
     authentication: DprAuthAwareAuthenticationToken,
   ) {
-    val definition = gson.fromJson(body, ProductDefinition::class.java)
+    val definition = dprDefinitionGson.fromJson(body, ProductDefinition::class.java)
 
     definitionService.validateAndSave(definition, authentication)
   }
