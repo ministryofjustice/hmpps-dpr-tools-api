@@ -21,6 +21,7 @@ class FakeConfiguredApiService(
     userToken: DprAuthAwareAuthenticationToken?,
     reportFieldId: String?,
     prefix: String?,
+    dataProductDefinitionsPath: String?,
   ): List<Map<String, Any>> {
     return emptyList()
   }

@@ -13,16 +13,16 @@ class InMemoryProductDefinitionRepository : AbstractProductDefinitionRepository(
 
   private val definitions: ConcurrentHashMap<String, ProductDefinition> = ConcurrentHashMap()
 
-  override fun getProductDefinitions(): List<ProductDefinition> {
+  override fun getProductDefinitions(path: String?): List<ProductDefinition> {
     return definitions.values.toList()
   }
 
-  override fun getProductDefinition(definitionId: String): ProductDefinition =
+  override fun getProductDefinition(definitionId: String, dataProductDefinitionsPath: String?): ProductDefinition =
     definitions.getOrElse(definitionId) { throw DefinitionNotFoundException("Invalid report id provided: $definitionId") }
 
-  override fun getSingleReportProductDefinition(definitionId: String, reportId: String): SingleReportProductDefinition {
+  override fun getSingleReportProductDefinition(definitionId: String, reportId: String, dataProductDefinitionsPath: String?): SingleReportProductDefinition {
     try {
-      return super.getSingleReportProductDefinition(definitionId, reportId)
+      return super.getSingleReportProductDefinition(definitionId, reportId, null)
     } catch (e: ValidationException) {
       throw DefinitionNotFoundException(e.message)
     }
