@@ -77,3 +77,7 @@ dpr:
       role: ${AUTHORISED_ROLES}
     definition:
       locations: unused.json
+
+logging:
+  level:
+    uk.gov.justice.digital.hmpps.digitalprisonreportinglib: debug
