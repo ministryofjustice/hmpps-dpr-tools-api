@@ -22,7 +22,7 @@ class DefinitionService(
   ) {
     try {
       // Attempt mapping to assert references are correct
-      mapper.map(definition, RenderMethod.HTML, 1, authenticationToken)
+      mapper.map(definition, RenderMethod.HTML, authenticationToken)
 
       // Check each query executes successfully
       definition.dataset.forEach { dataset ->
