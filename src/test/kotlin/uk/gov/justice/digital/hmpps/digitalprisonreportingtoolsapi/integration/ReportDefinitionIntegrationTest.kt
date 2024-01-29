@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.expectBodyList
 import org.springframework.test.web.reactive.server.returnResult
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.FieldType
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.ReportDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.SingleVariantReportDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.VariantDefinition
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.*
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.config.ErrorResponse
 
 class ReportDefinitionIntegrationTest : IntegrationTestBase() {
@@ -110,7 +107,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       .exchange()
       .expectStatus()
       .isOk
-      .expectBodyList<ReportDefinition>()
+      .expectBodyList<ReportDefinitionSummary>()
       .returnResult()
       .responseBody!!
 
@@ -122,7 +119,9 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
     assertThat(definition.variants).hasSize(1)
     assertThat(definition.variants[0]).isNotNull
 
-    assertVariant(definition.variants[0])
+    assertThat(definition.variants[0].id).isEqualTo("40")
+    assertThat(definition.variants[0].name).isEqualTo("41")
+    assertThat(definition.variants[0].description).isEqualTo("42")
   }
 
   @Test
@@ -170,9 +169,9 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
     assertThat(field.sortable).isEqualTo(true)
     assertThat(field.defaultsort).isEqualTo(false)
     assertThat(field.type).isEqualTo(FieldType.String)
-    assertThat(field.wordWrap).isEqualTo(uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.WordWrap.None)
+    assertThat(field.wordWrap).isEqualTo(WordWrap.None)
     assertThat(field.filter).isNotNull()
-    assertThat(field.filter!!.type).isEqualTo(uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.FilterType.Radio)
+    assertThat(field.filter!!.type).isEqualTo(FilterType.Radio)
     assertThat(field.filter!!.staticOptions).hasSize(1)
   }
 
