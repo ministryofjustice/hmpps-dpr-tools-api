@@ -20,12 +20,10 @@ spring:
         - "stdout"
 
   datasource:
-    url: ${REDSHIFT_JDBC_URL}
-    username: ${REDSHIFT_JDBC_USER}
-    password: ${REDSHIFT_JDBC_PASSWORD}
-    driver-class-name: com.amazon.redshift.jdbc.Driver
-    hikari:
-      maximum-pool-size: 20
+      url: ${REDSHIFT_JDBC_URL}
+      username: ${REDSHIFT_JDBC_USER}
+      password: ${REDSHIFT_JDBC_PASSWORD}
+      driver-class-name: com.amazon.redshift.jdbc.Driver
 
   security:
     oauth2:
@@ -68,7 +66,11 @@ management:
 springdoc:
   default-produces-media-type: application/json
 
-
+activities:
+    url: ${POSTGRES_JDBC_URL}
+    username: ${POSTGRES_JDBC_USER}
+    password: ${POSTGRES_JDBC_PASSWORD}
+    driver-class-name: org.postgresql.Driver
 dpr:
   lib:
     caseloads:
