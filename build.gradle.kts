@@ -17,6 +17,8 @@ dependencies {
   implementation("com.amazon.redshift:redshift-jdbc4-no-awssdk:1.2.45.1069")
   implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:3.0.0")
   implementation("com.google.code.gson:gson:2.10.1")
+  implementation("org.postgresql:postgresql:42.7.1")
+  implementation("javax.xml.bind:jaxb-api:2.3.1")
 
   // Security
   implementation("org.springframework.boot:spring-boot-starter-security")
@@ -25,6 +27,7 @@ dependencies {
 
   // Swagger
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+  implementation("org.springframework.boot:spring-boot-starter-data-jdbc:3.2.2")
 
   // Testing
   testImplementation("com.h2database:h2")
