@@ -65,7 +65,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
             "template": "list",
             "field": [
               {
-                "name": "F30",
+                "name": "${'$'}ref:F30",
                 "display": "51",
                 "wordWrap": "None",
                 "filter": {
@@ -77,7 +77,6 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 },
                 "sortable": true,
                 "defaultsort": false,
-                "formula": "52",
                 "visible": true
               }
             ]
