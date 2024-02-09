@@ -10,6 +10,7 @@ generic-service:
     HMPPS_AUTH_URL: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     ME_CASELOADS_API_HOST: https://nomis-user-pp.aks-live-1.studio-hosting.service.justice.gov.uk
+    URL_ENV_SUFFIX: preprod
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts
