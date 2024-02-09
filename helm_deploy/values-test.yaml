@@ -9,6 +9,7 @@ generic-service:
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     ME_CASELOADS_API_HOST: https://nomis-user-roles-api-dev.prison.service.justice.gov.uk
+    URL_ENV_SUFFIX: test
 
   allowlist:
     groups:
