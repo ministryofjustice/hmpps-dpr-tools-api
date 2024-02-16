@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.integration
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.expectBodyList
@@ -15,7 +14,6 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.V
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.WordWrap
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.config.ErrorResponse
 
-@Disabled
 class ReportDefinitionIntegrationTest : IntegrationTestBase() {
 
   val productDefinition =

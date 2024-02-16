@@ -12,6 +12,7 @@ customdatasource:
     url: ${REDSHIFT_JDBC_URL}
     username: ${REDSHIFT_JDBC_USER}
     password: ${REDSHIFT_JDBC_PASSWORD}
+    driver: com.amazon.redshift.jdbc.Driver
 
 spring:
   application:

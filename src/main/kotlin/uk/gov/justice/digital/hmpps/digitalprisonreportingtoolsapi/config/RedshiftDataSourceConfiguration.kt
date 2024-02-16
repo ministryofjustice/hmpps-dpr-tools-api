@@ -11,6 +11,7 @@ class RedshiftDataSourceConfiguration(
   @Value("\${customdatasource.redshift.url}") val url: String,
   @Value("\${customdatasource.redshift.username}") val username: String,
   @Value("\${customdatasource.redshift.password}") val password: String,
+  @Value("\${customdatasource.redshift.driver}") val driver: String,
 ) {
   @Bean("redshift")
   fun createRedshiftDataSource(): DataSource {
@@ -18,7 +19,7 @@ class RedshiftDataSourceConfiguration(
       .url(url)
       .username(username)
       .password(password)
-      .driverClassName("com.amazon.redshift.jdbc.Driver")
+      .driverClassName(driver)
       .build()
   }
 }
