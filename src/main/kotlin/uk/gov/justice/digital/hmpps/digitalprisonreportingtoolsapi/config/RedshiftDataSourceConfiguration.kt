@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
+import java.util.*
 import javax.sql.DataSource
+
 
 @Configuration
 class RedshiftDataSourceConfiguration(
@@ -14,6 +17,7 @@ class RedshiftDataSourceConfiguration(
   @Value("\${customdatasource.redshift.driver}") val driver: String,
 ) {
   @Bean("redshift")
+  @Primary
   fun createRedshiftDataSource(): DataSource {
     return DataSourceBuilder.create()
       .url(url)

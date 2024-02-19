@@ -31,14 +31,6 @@ spring:
       test:
         - "stdout"
 
-  datasource:
-    url: ${REDSHIFT_JDBC_URL}
-    username: ${REDSHIFT_JDBC_USER}
-    password: ${REDSHIFT_JDBC_PASSWORD}
-    driver-class-name: com.amazon.redshift.jdbc.Driver
-    hikari:
-      maximum-pool-size: 20
-
   security:
     oauth2:
       resourceserver:
