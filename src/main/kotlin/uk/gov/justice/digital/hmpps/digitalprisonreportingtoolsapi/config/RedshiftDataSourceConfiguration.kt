@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Primary
 import java.util.*
 import javax.sql.DataSource
 
-
 @Configuration
 class RedshiftDataSourceConfiguration(
   @Value("\${customdatasource.redshift.url}") val url: String,
