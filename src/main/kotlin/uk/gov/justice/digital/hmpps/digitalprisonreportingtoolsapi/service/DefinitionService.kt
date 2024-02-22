@@ -31,7 +31,7 @@ class DefinitionService(
           filters = emptyList(),
           query = dataset.query,
           policyEngineResult = "FALSE",
-          dataSourceName = "",
+          dataSourceName = definition.datasource.first().name,
         )
       }
     } catch (e: Exception) {

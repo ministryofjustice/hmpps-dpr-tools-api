@@ -2,6 +2,18 @@ info.app:
   name: Digital Prison Reporting Tools API
   version: 1.0
 
+customdatasource:
+  activities:
+    url: ${ACTIVITIES_JDBC_URL}
+    username: ${ACTIVITIES_JDBC_USER}
+    password: ${ACTIVITIES_JDBC_PASSWORD}
+    driver: org.postgresql.Driver
+  redshift:
+    url: ${REDSHIFT_JDBC_URL}
+    username: ${REDSHIFT_JDBC_USER}
+    password: ${REDSHIFT_JDBC_PASSWORD}
+    driver: com.amazon.redshift.jdbc.Driver
+
 spring:
   application:
     name: hmpps-dpr-tools-api
@@ -18,14 +30,6 @@ spring:
     group:
       test:
         - "stdout"
-
-  datasource:
-    url: ${REDSHIFT_JDBC_URL}
-    username: ${REDSHIFT_JDBC_USER}
-    password: ${REDSHIFT_JDBC_PASSWORD}
-    driver-class-name: com.amazon.redshift.jdbc.Driver
-    hikari:
-      maximum-pool-size: 20
 
   security:
     oauth2:
