@@ -77,7 +77,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 },
                 "sortable": true,
                 "defaultsort": false,
-                "visible": true
+                "visible": "true"
               }
             ]
           },
@@ -318,7 +318,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                     "name": "prisonNumber",
                     "display": "Prison Number",
                     "formula": "",
-                    "visible": true,
+                    "visible": "true",
                     "sortable": true,
                     "defaultsort": true
                   }
@@ -400,7 +400,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                       "name": "prisonNumber",
                       "display": "Prison Number",
                       "formula": "",
-                      "visible": true,
+                      "visible": "true",
                       "sortable": true,
                       "defaultsort": true
                     }
@@ -487,7 +487,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                       "name": "date",
                       "display": "Date",
                       "formula": "",
-                      "visible": true,
+                      "visible": "true",
                       "sortable": true,
                       "defaultsort": true,
                       "filter" : {
