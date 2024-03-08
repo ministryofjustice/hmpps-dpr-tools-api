@@ -19,7 +19,7 @@ class DefinitionService(
   fun validateAndSave(
     definition: ProductDefinition,
     authenticationToken: DprAuthAwareAuthenticationToken,
-    originalBody: String
+    originalBody: String,
   ) {
     try {
       // Attempt mapping to assert references are correct
