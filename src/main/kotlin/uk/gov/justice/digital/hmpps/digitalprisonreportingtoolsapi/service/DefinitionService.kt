@@ -19,6 +19,7 @@ class DefinitionService(
   fun validateAndSave(
     definition: ProductDefinition,
     authenticationToken: DprAuthAwareAuthenticationToken,
+    originalBody: String,
   ) {
     try {
       // Attempt mapping to assert references are correct
@@ -37,10 +38,12 @@ class DefinitionService(
     } catch (e: Exception) {
       throw InvalidDefinitionException(e)
     }
-    repository.save(definition)
+    repository.save(definition, originalBody)
   }
 
   fun deleteById(definitionId: String) {
     repository.deleteById(definitionId)
   }
+
+  fun getOriginalBody(definitionId: String) = repository.getOriginalBody(definitionId)
 }

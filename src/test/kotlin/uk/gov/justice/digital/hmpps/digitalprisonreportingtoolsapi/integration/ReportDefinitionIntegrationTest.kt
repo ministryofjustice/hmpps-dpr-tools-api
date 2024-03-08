@@ -45,8 +45,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
           "field": [
             {
               "name": "F30",
-              "type": "string",
-              "caseload": false
+              "type": "string"
             }
           ]
         }
@@ -57,7 +56,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
           "id": "40",
           "name": "41",
           "description": "42",
-          "created": "2023-12-07T09:21:00.000Z",
+          "created": "2023-12-07T09:21:00",
           "version": "43",
           "dataset": "20",
           "render": "HTML",
@@ -239,7 +238,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 "id": "everyone",
                 "name": "Everyone",
                 "description": "EVERYONE",
-                "created": "2023-12-04T14:41:00.000Z",
+                "created": "2023-12-04T14:41:00",
                 "classification": "OFFICIAL",
                 "version": "1.2.3",
                 "render": "HTML",
@@ -306,7 +305,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 "id": "everyone",
                 "name": "Everyone",
                 "description": "EVERYONE",
-                "created": "2023-12-04T14:41:00.000Z",
+                "created": "2023-12-04T14:41:00",
                 "classification": "OFFICIAL",
                 "version": "1.2.3",
                 "render": "HTML",
@@ -388,7 +387,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 "id": "everyone",
                 "name": "Everyone",
                 "description": "EVERYONE",
-                "created": "2023-12-04T14:41:00.000Z",
+                "created": "2023-12-04T14:41:00",
                 "classification": "OFFICIAL",
                 "version": "1.2.3",
                 "render": "HTML",
@@ -475,7 +474,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 "id": "everyone",
                 "name": "Everyone",
                 "description": "EVERYONE",
-                "created": "2023-12-04T14:41:00.000Z",
+                "created": "2023-12-04T14:41:00",
                 "classification": "OFFICIAL",
                 "version": "1.2.3",
                 "render": "HTML",
@@ -573,5 +572,29 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       .exchange()
       .expectStatus()
       .isNotFound
+  }
+
+  @Test
+  fun `Definition is fetched`() {
+    webTestClient.put()
+      .uri("/definitions/1")
+      .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(productDefinition)
+      .exchange()
+      .expectStatus()
+      .isOk
+
+    val savedDefinition = webTestClient.get()
+      .uri("/definitions/original/1")
+      .headers(setAuthorisation(roles = listOf(authorisedRole)))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectBody(String::class.java)
+      .returnResult()
+      .responseBody
+
+    assertThat(savedDefinition).isEqualTo(productDefinition)
   }
 }
