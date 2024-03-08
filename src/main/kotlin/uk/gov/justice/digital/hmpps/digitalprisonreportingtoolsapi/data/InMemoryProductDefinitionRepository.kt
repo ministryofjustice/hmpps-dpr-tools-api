@@ -11,14 +11,14 @@ import java.util.concurrent.ConcurrentHashMap
 @Service
 class InMemoryProductDefinitionRepository : AbstractProductDefinitionRepository() {
 
-  private val definitions: ConcurrentHashMap<String, ProductDefinition> = ConcurrentHashMap()
+  private val definitions: ConcurrentHashMap<String, Pair<ProductDefinition, String>> = ConcurrentHashMap()
 
   override fun getProductDefinitions(path: String?): List<ProductDefinition> {
-    return definitions.values.toList()
+    return definitions.values.map { it.first }.toList()
   }
 
   override fun getProductDefinition(definitionId: String, dataProductDefinitionsPath: String?): ProductDefinition =
-    definitions.getOrElse(definitionId) { throw DefinitionNotFoundException("Invalid report id provided: $definitionId") }
+    definitions.getOrElse(definitionId) { throw DefinitionNotFoundException("Invalid report id provided: $definitionId") }.first
 
   override fun getSingleReportProductDefinition(definitionId: String, reportId: String, dataProductDefinitionsPath: String?): SingleReportProductDefinition {
     try {
@@ -28,11 +28,13 @@ class InMemoryProductDefinitionRepository : AbstractProductDefinitionRepository(
     }
   }
 
-  fun save(definition: ProductDefinition) {
-    definitions[definition.id] = definition
+  fun save(definition: ProductDefinition, originalBody: String) {
+    definitions[definition.id] = Pair(definition, originalBody)
   }
 
   fun deleteById(definitionId: String) {
     definitions.remove(definitionId)
   }
+
+  fun getOriginalBody(definitionId: String) = definitions[definitionId]?.second
 }
