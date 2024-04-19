@@ -1,5 +1,5 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "5.+"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "5.15.6"
   kotlin("jvm") version "1.9.20"
   kotlin("plugin.spring") version "1.9.20"
   id("jacoco")
@@ -15,7 +15,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("com.amazon.redshift:redshift-jdbc4-no-awssdk:1.2.45.1069")
   implementation("org.postgresql:postgresql:42.7.2")
-  implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:3.7.0")
+  implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:3.7.4")
   implementation("com.google.code.gson:gson:2.10.1")
 
   // Security
