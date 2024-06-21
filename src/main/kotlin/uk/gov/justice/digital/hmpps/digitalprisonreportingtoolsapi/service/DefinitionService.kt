@@ -2,7 +2,9 @@ package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service
 
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.RenderMethod
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AthenaApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApiRepository
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.RedshiftDataApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ReportDefinitionMapper
@@ -13,8 +15,10 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.Inv
 class DefinitionService(
   private val repository: InMemoryProductDefinitionRepository,
   private val dataRepository: ConfiguredApiRepository,
+  athenaApiRepository: AthenaApiRepository,
+  redshiftDataApiRepository: RedshiftDataApiRepository,
 ) {
-  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository))
+  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository, athenaApiRepository, redshiftDataApiRepository))
 
   fun validateAndSave(
     definition: ProductDefinition,
