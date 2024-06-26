@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service
 
+import jakarta.validation.ValidationException
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.RenderMethod
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AthenaApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.RedshiftDataApiRepository
@@ -20,14 +20,19 @@ class DefinitionService(
 ) {
   val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository, athenaApiRepository, redshiftDataApiRepository))
 
-  fun validateAndSave(
+  fun saveAndValidate(
     definition: ProductDefinition,
     authenticationToken: DprAuthAwareAuthenticationToken,
     originalBody: String,
   ) {
     try {
-      // Attempt mapping to assert references are correct
-      mapper.map(definition, RenderMethod.HTML, authenticationToken)
+      definition.id?.let {
+        repository.save(definition, originalBody)
+      } ?: throw ValidationException("Definition missing id.")
+      definition.report
+        .map { report -> repository.getSingleReportProductDefinition(definitionId = definition.id, report.id) }
+        // Attempt mapping to assert references are correct
+        .map { mapper.map(it, userToken = authenticationToken) }
 
       // Check each query executes successfully
       definition.dataset.forEach { dataset ->
@@ -40,9 +45,11 @@ class DefinitionService(
         )
       }
     } catch (e: Exception) {
+      definition.id?.let {
+        repository.deleteById(definition.id)
+      }
       throw InvalidDefinitionException(e)
     }
-    repository.save(definition, originalBody)
   }
 
   fun deleteById(definitionId: String) {
