@@ -33,7 +33,7 @@ class DefinitionController(
   ) {
     val definition = dprDefinitionGson.fromJson(body, ProductDefinition::class.java)
 
-    definitionService.validateAndSave(definition, authentication, body)
+    definitionService.saveAndValidate(definition, authentication, body)
   }
 
   @Operation(
