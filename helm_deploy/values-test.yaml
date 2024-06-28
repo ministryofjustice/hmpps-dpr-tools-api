@@ -1,6 +1,8 @@
 # Per environment values which override defaults in hmpps-dpr-tools-api/values.yaml
 
 generic-service:
+  serviceAccountName: "dpr-tools-test-cross-iam"
+
   ingress:
     host: dpr-tools-api-test.hmpps.service.justice.gov.uk
 
@@ -10,6 +12,10 @@ generic-service:
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     ME_CASELOADS_API_HOST: https://nomis-user-roles-api-dev.prison.service.justice.gov.uk
     URL_ENV_SUFFIX: test
+    REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-test
+    REDSHIFT_DATA_DB: datamart
+    REDSHIFT_DATA_ROLE_ARN: arn:aws:iam::203591025782:role/dpr-data-api-cross-account-role
+    REDSHIFT_DATA_S3_LOCATION: dpr-working-test/reports
 
   allowlist:
     groups:
