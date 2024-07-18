@@ -48,10 +48,13 @@ class DefinitionService(
         )
       }
     } catch (e: Exception) {
-      definition.id.let {
-        repository.deleteById(definition.id)
+      try {
+        definition.id.let {
+          repository.deleteById(definition.id)
+        }
+      } finally {
+        throw InvalidDefinitionException(e)
       }
-      throw InvalidDefinitionException(e)
     }
   }
 
