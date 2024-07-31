@@ -16,7 +16,7 @@ dependencies {
   implementation("com.amazon.redshift:redshift-jdbc4-no-awssdk:1.2.45.1069")
   implementation("org.postgresql:postgresql:42.7.3")
   implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:5.0.2")
-  implementation("com.google.code.gson:gson:2.10.1")
+  implementation("com.google.code.gson:gson:2.11.0")
   implementation("software.amazon.awssdk:redshiftdata:2.25.44")
   implementation("software.amazon.awssdk:athena:2.26.27")
   implementation("software.amazon.awssdk:sts:2.26.22")
