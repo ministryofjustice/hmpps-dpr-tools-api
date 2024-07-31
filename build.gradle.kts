@@ -18,7 +18,7 @@ dependencies {
   implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:5.0.2")
   implementation("com.google.code.gson:gson:2.10.1")
   implementation("software.amazon.awssdk:redshiftdata:2.25.44")
-  implementation("software.amazon.awssdk:athena:2.26.22")
+  implementation("software.amazon.awssdk:athena:2.26.27")
   implementation("software.amazon.awssdk:sts:2.26.22")
 
   // Security
