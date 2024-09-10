@@ -1,23 +1,15 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service
 
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AthenaApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApiRepository
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.DatasetHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ProductDefinitionRepository
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.RedshiftDataApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Dataset
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ConfiguredApiService
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.TableIdGenerator
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.SyncDataApiService
 
 class FakeConfiguredApiService(
   override val productDefinitionRepository: ProductDefinitionRepository,
   override val configuredApiRepository: ConfiguredApiRepository,
-  override val athenaApiRepository: AthenaApiRepository,
-  override val redshiftDataApiRepository: RedshiftDataApiRepository,
-  override val tableIdGenerator: TableIdGenerator,
-  override val datasetHelper: DatasetHelper,
-) : ConfiguredApiService(productDefinitionRepository, configuredApiRepository, redshiftDataApiRepository, athenaApiRepository, tableIdGenerator, datasetHelper) {
+) : SyncDataApiService(productDefinitionRepository, configuredApiRepository) {
 
   override fun validateAndFetchData(
     reportId: String,
