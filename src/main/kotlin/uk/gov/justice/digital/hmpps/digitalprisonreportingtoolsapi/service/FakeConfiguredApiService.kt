@@ -7,8 +7,8 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAw
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.SyncDataApiService
 
 class FakeConfiguredApiService(
-  override val productDefinitionRepository: ProductDefinitionRepository,
-  override val configuredApiRepository: ConfiguredApiRepository,
+  productDefinitionRepository: ProductDefinitionRepository,
+  configuredApiRepository: ConfiguredApiRepository,
 ) : SyncDataApiService(productDefinitionRepository, configuredApiRepository) {
 
   override fun validateAndFetchData(
