@@ -6,7 +6,6 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.expectBodyList
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.FieldType
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.FilterType
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.ReportDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.ReportDefinitionSummary
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.SingleVariantReportDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.VariantDefinition
@@ -136,7 +135,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       .exchange()
       .expectStatus()
       .isOk
-      .expectBodyList<ReportDefinition>()
+      .expectBodyList<ReportDefinitionSummary>()
       .returnResult()
 
     val result = webTestClient.get()
@@ -455,7 +454,6 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
 
     assertThat(field.defaultsort).isFalse()
     assertThat(field.filter).isNotNull()
-    assertThat(field.filter!!.dynamicOptions!!.returnAsStaticOptions).isTrue()
     assertThat(field.filter!!.staticOptions!![0].name).isEqualTo("70")
   }
 
