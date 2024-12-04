@@ -15,7 +15,7 @@ class DefinitionService(
   private val repository: InMemoryProductDefinitionRepository,
   dataRepository: ConfiguredApiRepository,
   datasetHelper: DatasetHelper,
-  establishmentCodesToWingsCacheService: EstablishmentCodesToWingsCacheService
+  establishmentCodesToWingsCacheService: EstablishmentCodesToWingsCacheService,
 ) {
   val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository), datasetHelper, establishmentCodesToWingsCacheService)
 
