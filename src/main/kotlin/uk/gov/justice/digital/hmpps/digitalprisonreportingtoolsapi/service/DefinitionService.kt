@@ -6,6 +6,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.DatasetHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ReportDefinitionMapper
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.estcodesandwings.EstablishmentCodesToWingsCacheService
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data.InMemoryProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.InvalidDefinitionException
 
@@ -14,8 +15,9 @@ class DefinitionService(
   private val repository: InMemoryProductDefinitionRepository,
   dataRepository: ConfiguredApiRepository,
   datasetHelper: DatasetHelper,
+  establishmentCodesToWingsCacheService: EstablishmentCodesToWingsCacheService,
 ) {
-  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository), datasetHelper)
+  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository), datasetHelper, establishmentCodesToWingsCacheService)
 
   fun saveAndValidate(
     definition: ProductDefinition,
