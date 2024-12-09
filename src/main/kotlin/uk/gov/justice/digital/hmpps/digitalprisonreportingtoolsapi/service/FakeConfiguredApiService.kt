@@ -4,14 +4,16 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApi
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Dataset
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ProductDefinitionTokenPolicyChecker
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.SyncDataApiService
 
 class FakeConfiguredApiService(
   productDefinitionRepository: ProductDefinitionRepository,
   configuredApiRepository: ConfiguredApiRepository,
-) : SyncDataApiService(productDefinitionRepository, configuredApiRepository) {
+  productDefinitionTokenPolicyChecker: ProductDefinitionTokenPolicyChecker,
+) : SyncDataApiService(productDefinitionRepository, configuredApiRepository, productDefinitionTokenPolicyChecker) {
 
-  override fun validateAndFetchData(
+  override suspend fun validateAndFetchData(
     reportId: String,
     reportVariantId: String,
     filters: Map<String, String>,
