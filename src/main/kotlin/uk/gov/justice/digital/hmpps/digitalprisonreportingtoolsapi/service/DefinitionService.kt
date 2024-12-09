@@ -5,6 +5,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApi
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.DatasetHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ProductDefinitionTokenPolicyChecker
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ReportDefinitionMapper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.estcodesandwings.EstablishmentCodesToWingsCacheService
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data.InMemoryProductDefinitionRepository
@@ -16,10 +17,11 @@ class DefinitionService(
   dataRepository: ConfiguredApiRepository,
   datasetHelper: DatasetHelper,
   establishmentCodesToWingsCacheService: EstablishmentCodesToWingsCacheService,
+  productDefinitionTokenPolicyChecker: ProductDefinitionTokenPolicyChecker,
 ) {
-  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository), datasetHelper, establishmentCodesToWingsCacheService)
+  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository, productDefinitionTokenPolicyChecker), datasetHelper, establishmentCodesToWingsCacheService)
 
-  fun saveAndValidate(
+  suspend fun saveAndValidate(
     definition: ProductDefinition,
     authenticationToken: DprAuthAwareAuthenticationToken,
     originalBody: String,

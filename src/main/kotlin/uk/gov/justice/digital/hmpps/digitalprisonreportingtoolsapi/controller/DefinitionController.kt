@@ -25,7 +25,7 @@ class DefinitionController(
     security = [SecurityRequirement(name = "bearer-jwt")],
   )
   @PutMapping("/definitions/{definitionId}")
-  fun putDefinition(
+  suspend fun putDefinition(
     @RequestBody
     body: String,
     @PathVariable definitionId: String,
