@@ -81,6 +81,16 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
         }
       ],
       "policy": [
+      {
+        "id": "accessPolicy",
+        "type": "access",
+        "rule": [
+          {
+            "effect": "permit",
+            "condition": []
+          }
+        ]
+        },
         {
           "id": "60",
           "type": "row-level",
@@ -372,6 +382,16 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
               }
             ],
             "policy": [
+            {
+              "id": "accessPolicy",
+              "type": "access",
+              "rule": [
+                {
+                  "effect": "permit",
+                  "condition": []
+                }
+              ]
+              },
               {
                 "id": "60",
                 "type": "row-level",
