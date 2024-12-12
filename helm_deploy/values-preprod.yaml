@@ -11,6 +11,7 @@ generic-service:
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     ME_CASELOADS_API_HOST: https://nomis-user-roles-api-preprod.prison.service.justice.gov.uk
     URL_ENV_SUFFIX: preprod
+    DPR_LIB_AWS_ACCOUNTID: "972272129531"
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts
