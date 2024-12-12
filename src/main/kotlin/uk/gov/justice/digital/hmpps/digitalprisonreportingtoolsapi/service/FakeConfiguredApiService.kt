@@ -13,7 +13,7 @@ class FakeConfiguredApiService(
   productDefinitionTokenPolicyChecker: ProductDefinitionTokenPolicyChecker,
 ) : SyncDataApiService(productDefinitionRepository, configuredApiRepository, productDefinitionTokenPolicyChecker) {
 
-  override suspend fun validateAndFetchData(
+  override fun validateAndFetchData(
     reportId: String,
     reportVariantId: String,
     filters: Map<String, String>,
