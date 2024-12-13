@@ -91,6 +91,9 @@ dpr:
     aws:
       sts:
         enabled: true
+    establishmentsAndWings:
+      cache:
+        durationMinutes: 5
 
 logging:
   level:
