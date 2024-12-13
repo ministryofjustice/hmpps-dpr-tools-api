@@ -86,15 +86,13 @@ dpr:
       clusterid: ${REDSHIFT_DATA_CLUSTER_ID}
       database: ${REDSHIFT_DATA_DB}
       tokenrefreshdurationsec: 3600
+      rolearn: ${REDSHIFT_DATA_ROLE_ARN}
+      rolesessionname: dpr-cross-account-role-session
       s3location: ${REDSHIFT_DATA_S3_LOCATION}
       athenaworkgroup: dpr-generic-athena-workgroup
-    aws:
-      sts:
-        enabled: true
     establishmentsAndWings:
       cache:
         durationMinutes: 5
-
 logging:
   level:
     uk.gov.justice.digital.hmpps.digitalprisonreportinglib: debug
