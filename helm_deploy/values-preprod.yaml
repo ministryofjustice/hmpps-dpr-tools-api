@@ -11,6 +11,8 @@ generic-service:
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     ME_CASELOADS_API_HOST: https://nomis-user-roles-api-preprod.prison.service.justice.gov.uk
     URL_ENV_SUFFIX: preprod
+    REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-preproduction
+    REDSHIFT_DATA_S3_LOCATION: dpr-working-preproduction/reports
     DPR_LIB_AWS_ACCOUNTID: "972272129531"
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack

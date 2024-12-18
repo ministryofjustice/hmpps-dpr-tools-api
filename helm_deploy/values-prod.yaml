@@ -9,6 +9,8 @@ generic-service:
     HMPPS_AUTH_URL: https://sign-in.hmpps.service.justice.gov.uk/auth
     AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     ME_CASELOADS_API_HOST: https://nomis-user-roles-api.prison.service.justice.gov.uk
+    REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-production
+    REDSHIFT_DATA_S3_LOCATION: dpr-working-production/reports
     DPR_LIB_AWS_ACCOUNTID: "004723187462"
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
