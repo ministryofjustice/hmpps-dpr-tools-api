@@ -13,7 +13,6 @@ generic-service:
     ME_CASELOADS_API_HOST: https://nomis-user-roles-api-dev.prison.service.justice.gov.uk
     URL_ENV_SUFFIX: test
     REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-test
-    REDSHIFT_DATA_DB: datamart
     REDSHIFT_DATA_S3_LOCATION: dpr-working-test/reports
     DPR_LIB_AWS_ACCOUNTID: "203591025782"
 
