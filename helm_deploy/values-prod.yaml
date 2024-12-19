@@ -2,7 +2,7 @@
 # Per environment values which override defaults in hmpps-dpr-tools-api/values.yaml
 
 generic-service:
-  serviceAccountName: "dpr-tools-preprod-cross-iam"
+  serviceAccountName: "dpr-tools-prod-cross-iam"
 
   ingress:
     host: dpr-tools-api.hmpps.service.justice.gov.uk
