@@ -2,8 +2,11 @@
 # Per environment values which override defaults in hmpps-dpr-tools-api/values.yaml
 
 generic-service:
+  serviceAccountName: "dpr-tools-prod-cross-iam"
+
   ingress:
     host: dpr-tools-api.hmpps.service.justice.gov.uk
+
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
     HMPPS_AUTH_URL: https://sign-in.hmpps.service.justice.gov.uk/auth
