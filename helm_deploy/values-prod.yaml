@@ -12,6 +12,7 @@ generic-service:
     REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-production
     REDSHIFT_DATA_S3_LOCATION: dpr-working-production/reports
     DPR_LIB_AWS_ACCOUNTID: "004723187462"
+    CUSTOMDATASOURCE_ACTIVITIES_ENABLED: false
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts
