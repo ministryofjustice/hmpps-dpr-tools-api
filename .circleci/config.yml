@@ -12,6 +12,12 @@ parameters:
   releases-slack-channel:
     type: string
     default: dpr_cicd_approvals
+  workingdir:
+    type: string
+    default: '.'
+  dockerfile_dir:
+    type: string
+    default: "."
 
 jobs:
   validate:
