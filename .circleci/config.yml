@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   hmpps: ministryofjustice/hmpps@10
   slack: circleci/slack@4.12.1
+  mem: circleci/rememborb@0.0.2
 
 parameters:
   alerts-slack-channel:
@@ -11,6 +12,12 @@ parameters:
   releases-slack-channel:
     type: string
     default: dpr_cicd_approvals
+  workingdir:
+    type: string
+    default: '.'
+  dockerfile_dir:
+    type: string
+    default: "."
 
 jobs:
   validate:
@@ -33,6 +40,67 @@ jobs:
           path: build/test-results
       - store_artifacts:
           path: build/reports/tests
+  build_multiplatform_docker_job:
+    docker:
+      - image: cimg/base:stable
+    resource_class: small
+    parameters:
+      image_name:
+        type: string
+        default: "quay.io/hmpps/${CIRCLE_PROJECT_REPONAME}"
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - mem/remember:
+          env_var: APP_VERSION
+          value: "Build.${CIRCLE_SHA1}"
+      - run:
+          name: Create IMAGE_NAME env var
+          command: |
+            IMAGE_NAME="<< parameters.image_name >>"
+            echo "export IMAGE_NAME=$IMAGE_NAME" >> $BASH_ENV
+      - mem/remember:
+          env_var: IMAGE_NAME
+          value: "${IMAGE_NAME}"
+      - run:
+          name: Setup buildx
+          command: |
+            docker context create multi-arch-build
+            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+            docker run --rm --privileged tonistiigi/binfmt --install all
+            docker buildx create --use multi-arch-build --platform linux/arm64,linux/amd64
+      - run:
+          name: quay.io login
+          command: docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+      - run:
+          name: Build container image
+          command: |
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 --pull \
+              --progress plain \
+              --rm=false << pipeline.parameters.dockerfile_dir >> \
+              --build-arg BUILD_NUMBER=$APP_VERSION \
+              --build-arg GIT_REF=$CIRCLE_SHA1 \
+              --build-arg GIT_BRANCH=$CIRCLE_BRANCH \
+              --tag "${IMAGE_NAME}:${APP_VERSION}" \
+              --tag "${IMAGE_NAME}:latest" \
+              --label "maintainer=dps-hmpps@digital.justice.gov.uk" \
+              --label "app.version=${APP_VERSION}" \
+              --label "build.version=${APP_VERSION}" \
+              --label "build.number=${CIRCLE_BUILD_NUM}" \
+              --label "build.url=${CIRCLE_BUILD_URL}" \
+              --label "build.gitref=${CIRCLE_SHA1}" \
+              --push
+  remember-app-version:
+    executor:
+      name: hmpps/java
+      tag: "21.0"
+    steps:
+      - mem/remember:
+          env_var: APP_VERSION
+          value: "Build.${CIRCLE_SHA1}"
 
 workflows:
   version: 2
@@ -44,7 +112,7 @@ workflows:
               ignore: /.*/
       - hmpps/helm_lint:
           name: helm_lint
-      - hmpps/build_multiplatform_docker:
+      - build_multiplatform_docker_job:
           name: build_docker
           filters:
             branches:
@@ -71,6 +139,10 @@ workflows:
           type: approval
           requires:
             - deploy_dev
+      - remember-app-version:
+          name: remember-version-for-test
+          requires:
+            - request-test-approval
       - hmpps/deploy_env:
           name: deploy_test
           env: "test"
@@ -84,12 +156,16 @@ workflows:
               only:
                 - main
           requires:
-            - request-test-approval
+            - remember-version-for-test
           helm_timeout: 5m
       - request-preprod-approval:
           type: approval
           requires:
             - deploy_dev
+      - remember-app-version:
+          name: remember-version-for-preprod
+          requires:
+            - request-preprod-approval
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
@@ -100,12 +176,16 @@ workflows:
             - hmpps-common-vars
             - hmpps-dpr-tools-api-preprod
           requires:
-            - request-preprod-approval
+            - remember-version-for-preprod
           helm_timeout: 5m
       - request-prod-approval:
           type: approval
           requires:
             - deploy_preprod
+      - remember-app-version:
+          name: remember-version-for-prod
+          requires:
+            - request-prod-approval
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
@@ -118,7 +198,7 @@ workflows:
             - hmpps-common-vars
             - hmpps-dpr-tools-api-prod
           requires:
-            - request-prod-approval
+            - remember-version-for-prod
           helm_timeout: 5m
 
   security:
