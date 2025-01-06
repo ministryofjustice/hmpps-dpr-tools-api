@@ -40,6 +40,10 @@ jobs:
           path: build/test-results
       - store_artifacts:
           path: build/reports/tests
+      - persist_to_workspace:
+          root: << pipeline.parameters.workingdir >>
+          paths:
+            - .
   build_multiplatform_docker_job:
     docker:
       - image: cimg/base:stable
@@ -118,6 +122,9 @@ workflows:
             branches:
               only:
                 - main
+          requires:
+            - helm_lint
+            - validate
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
