@@ -1,5 +1,5 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "6.0.8"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "6.1.2"
   kotlin("jvm") version "2.0.21"
   kotlin("plugin.spring") version "2.0.21"
   id("jacoco")
@@ -15,7 +15,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("com.amazon.redshift:redshift-jdbc4-no-awssdk:1.2.45.1069")
   implementation("org.postgresql:postgresql:42.7.4")
-  implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:7.3.14")
+  implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:7.3.15")
   implementation("com.google.code.gson:gson:2.11.0")
   implementation("software.amazon.awssdk:redshiftdata:2.29.46")
   implementation("software.amazon.awssdk:athena:2.29.20")
@@ -27,7 +27,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
   // Swagger
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1")
 
   // Testing
   testImplementation("com.h2database:h2")
