@@ -19,7 +19,7 @@ dependencies {
   implementation("com.google.code.gson:gson:2.11.0")
   implementation("software.amazon.awssdk:redshiftdata:2.29.50")
   implementation("software.amazon.awssdk:athena:2.29.20")
-  implementation("software.amazon.awssdk:sts:2.29.51")
+  implementation("software.amazon.awssdk:sts:2.29.52")
 
   // Security
   implementation("org.springframework.boot:spring-boot-starter-security")
