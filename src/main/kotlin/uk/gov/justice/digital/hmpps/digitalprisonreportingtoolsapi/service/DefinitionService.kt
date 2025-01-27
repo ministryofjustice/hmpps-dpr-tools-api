@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service
 
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApiRepository
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.DatasetHelper
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ProductDefinitionTokenPolicyChecker
@@ -15,11 +15,11 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.Inv
 class DefinitionService(
   private val repository: InMemoryProductDefinitionRepository,
   dataRepository: ConfiguredApiRepository,
-  datasetHelper: DatasetHelper,
+  identifiedHelper: IdentifiedHelper,
   establishmentCodesToWingsCacheService: EstablishmentCodesToWingsCacheService,
   productDefinitionTokenPolicyChecker: ProductDefinitionTokenPolicyChecker,
 ) {
-  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository, productDefinitionTokenPolicyChecker), datasetHelper, establishmentCodesToWingsCacheService)
+  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository, productDefinitionTokenPolicyChecker, identifiedHelper), identifiedHelper, establishmentCodesToWingsCacheService)
 
   suspend fun saveAndValidate(
     definition: ProductDefinition,
@@ -33,7 +33,7 @@ class DefinitionService(
       definition.report
         .map { report -> repository.getSingleReportProductDefinition(definitionId = definition.id, report.id) }
         // Attempt mapping to assert references are correct
-        .map { mapper.map(it, userToken = authenticationToken) }
+        .map { mapper.mapReport(it, userToken = authenticationToken) }
     } catch (e: Exception) {
       try {
         definition.id.let {

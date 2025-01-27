@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service
 
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApiRepository
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Dataset
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
@@ -11,7 +12,8 @@ class FakeConfiguredApiService(
   productDefinitionRepository: ProductDefinitionRepository,
   configuredApiRepository: ConfiguredApiRepository,
   productDefinitionTokenPolicyChecker: ProductDefinitionTokenPolicyChecker,
-) : SyncDataApiService(productDefinitionRepository, configuredApiRepository, productDefinitionTokenPolicyChecker) {
+  identifiedHelper: IdentifiedHelper,
+) : SyncDataApiService(productDefinitionRepository, configuredApiRepository, productDefinitionTokenPolicyChecker, identifiedHelper) {
 
   override fun validateAndFetchData(
     reportId: String,
