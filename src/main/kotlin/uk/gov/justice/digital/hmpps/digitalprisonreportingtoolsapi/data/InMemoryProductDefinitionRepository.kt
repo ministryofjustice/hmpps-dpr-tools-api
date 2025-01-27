@@ -3,13 +3,14 @@ package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data
 import jakarta.validation.ValidationException
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProductDefinitionRepository
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.SingleReportProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.DefinitionNotFoundException
 import java.util.concurrent.ConcurrentHashMap
 
 @Service
-class InMemoryProductDefinitionRepository : AbstractProductDefinitionRepository() {
+class InMemoryProductDefinitionRepository(identifiedHelper: IdentifiedHelper) : AbstractProductDefinitionRepository(identifiedHelper) {
 
   private val definitions: ConcurrentHashMap<String, Pair<ProductDefinition, String>> = ConcurrentHashMap()
 
