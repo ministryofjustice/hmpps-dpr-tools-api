@@ -28,7 +28,5 @@ class FakeConfiguredApiService(
     prefix: String?,
     dataProductDefinitionsPath: String?,
     datasetForFilter: Dataset?,
-  ): List<Map<String, Any?>> {
-    return emptyList()
-  }
+  ): List<Map<String, Any?>> = emptyList()
 }

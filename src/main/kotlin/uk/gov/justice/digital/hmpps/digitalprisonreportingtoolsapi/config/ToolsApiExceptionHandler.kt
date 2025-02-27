@@ -16,29 +16,23 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.Inv
 class ToolsApiExceptionHandler {
   @ExceptionHandler(MismatchedInputException::class)
   @ResponseStatus(BAD_REQUEST)
-  fun handleValidationException(e: Exception): ResponseEntity<ErrorResponse> {
-    return respondWithBadRequest(e)
-  }
+  fun handleValidationException(e: Exception): ResponseEntity<ErrorResponse> = respondWithBadRequest(e)
 
   @ExceptionHandler(InvalidDefinitionException::class)
   @ResponseStatus(BAD_REQUEST)
-  fun handleInvalidDefinitionException(e: Exception): ResponseEntity<ErrorResponse> {
-    return respondWithBadRequest(e)
-  }
+  fun handleInvalidDefinitionException(e: Exception): ResponseEntity<ErrorResponse> = respondWithBadRequest(e)
 
   @ExceptionHandler(DefinitionNotFoundException::class)
   @ResponseStatus(NOT_FOUND)
-  fun handleDefinitionNotFoundException(e: Exception): ResponseEntity<ErrorResponse> {
-    return ResponseEntity
-      .status(NOT_FOUND)
-      .body(
-        ErrorResponse(
-          status = NOT_FOUND,
-          userMessage = e.message,
-          developerMessage = e.message,
-        ),
-      )
-  }
+  fun handleDefinitionNotFoundException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity
+    .status(NOT_FOUND)
+    .body(
+      ErrorResponse(
+        status = NOT_FOUND,
+        userMessage = e.message,
+        developerMessage = e.message,
+      ),
+    )
 
   private fun respondWithBadRequest(e: Exception): ResponseEntity<ErrorResponse> {
     log.info("Validation exception: {}", e.message)

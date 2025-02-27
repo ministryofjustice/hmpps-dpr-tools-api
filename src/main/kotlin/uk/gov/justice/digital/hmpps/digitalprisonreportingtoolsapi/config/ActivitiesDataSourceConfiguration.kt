@@ -17,12 +17,10 @@ class ActivitiesDataSourceConfiguration(
 ) {
   @Bean("activities")
   @ConditionalOnProperty("customdatasource.activities.enabled", havingValue = "true")
-  fun createCustomDataSource(): DataSource {
-    return DataSourceBuilder.create()
-      .url(url)
-      .username(username)
-      .password(password)
-      .driverClassName(driver)
-      .build()
-  }
+  fun createCustomDataSource(): DataSource = DataSourceBuilder.create()
+    .url(url)
+    .username(username)
+    .password(password)
+    .driverClassName(driver)
+    .build()
 }
