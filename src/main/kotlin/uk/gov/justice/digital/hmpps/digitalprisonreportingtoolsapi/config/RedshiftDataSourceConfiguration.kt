@@ -17,12 +17,10 @@ class RedshiftDataSourceConfiguration(
 ) {
   @Bean("redshift")
   @Primary
-  fun createRedshiftDataSource(): DataSource {
-    return DataSourceBuilder.create()
-      .url(url)
-      .username(username)
-      .password(password)
-      .driverClassName(driver)
-      .build()
-  }
+  fun createRedshiftDataSource(): DataSource = DataSourceBuilder.create()
+    .url(url)
+    .username(username)
+    .password(password)
+    .driverClassName(driver)
+    .build()
 }
