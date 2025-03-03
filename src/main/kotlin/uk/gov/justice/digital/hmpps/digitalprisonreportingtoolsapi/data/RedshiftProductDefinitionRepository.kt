@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.dao.DuplicateKeyException
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -92,29 +91,20 @@ class RedshiftProductDefinitionRepository(
     namedParamsMap.addValue("id", definition.id)
     namedParamsMap.addValue("definition", originalBody)
     val stopwatch = StopWatch.createStarted()
-    try {
-      log.debug("Saving definition with id ${definition.id} into Redshift.")
-      val sql = """
-      INSERT INTO $database.$schema.$table (id, definition) VALUES (:id, :definition)
-      """.trimIndent()
-      log.debug("SQL query: $sql")
-      jdbcTemplate.update(
-        sql,
-        namedParamsMap,
-      )
-      stopwatch.stop()
-      log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
-    } catch (e: DuplicateKeyException) {
-      log.debug("Definition with id ${definition.id} already exists. Updating existing definition.")
-      val sql = """
-      UPDATE $database.$schema.$table SET definition = :definition WHERE id = :id
-      """.trimIndent()
-      jdbcTemplate.update(
-        sql,
-        namedParamsMap,
-      )
-      log.debug("Updated definition with id: ${definition.id} in {} ms.", stopwatch.time)
-    }
+    log.debug("Saving definition with id ${definition.id} into Redshift.")
+    val sql = """
+      BEGIN;
+      DELETE FROM $database.$schema.$table WHERE ID=:id;
+      INSERT INTO $database.$schema.$table (id, definition) VALUES (:id, :definition);
+      COMMIT;
+    """.trimIndent()
+    log.debug("SQL query: $sql")
+    jdbcTemplate.update(
+      sql,
+      namedParamsMap,
+    )
+    stopwatch.stop()
+    log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
   }
 
   override fun deleteById(definitionId: String) {
