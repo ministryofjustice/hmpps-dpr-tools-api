@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -86,33 +87,34 @@ class RedshiftProductDefinitionRepository(
   }
 
   override fun save(definition: ProductDefinition, originalBody: String) {
-    log.debug("Saving definition with id ${definition.id} into Redshift.")
-    val stopwatch = StopWatch.createStarted()
     val jdbcTemplate = NamedParameterJdbcTemplate(dataSource)
-    val sql = """
-      MERGE INTO $database.$schema.$table as target 
-      USING (VALUES (:id, :definition, :originalBody)) 
-      AS source (id, definition, original_body)
-      ON target.id = source.id
-      WHEN MATCHED THEN
-      UPDATE SET 
-      target.definition = source.definition,
-      target.original_body = source.original_body
-      WHEN NOT MATCHED THEN
-      INSERT (id, definition, original_body)
-      VALUES (source.id, source.definition, source.originalBody)
-    """.trimIndent()
     val namedParamsMap = MapSqlParameterSource()
     namedParamsMap.addValue("id", definition.id)
-    namedParamsMap.addValue("definition", definition)
-    namedParamsMap.addValue("originalBody", originalBody)
-    log.debug("SQL query: $sql")
-    jdbcTemplate.update(
-      sql,
-      namedParamsMap,
-    )
-    stopwatch.stop()
-    log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
+    namedParamsMap.addValue("definition", originalBody)
+    val stopwatch = StopWatch.createStarted()
+    try {
+      log.debug("Saving definition with id ${definition.id} into Redshift.")
+      val sql = """
+      INSERT INTO $database.$schema.$table (id, definition) VALUES (:id, :definition)
+      """.trimIndent()
+      log.debug("SQL query: $sql")
+      jdbcTemplate.update(
+        sql,
+        namedParamsMap,
+      )
+      stopwatch.stop()
+      log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
+    } catch (e: DuplicateKeyException) {
+      log.debug("Definition with id ${definition.id} already exists. Updating existing definition.")
+      val sql = """
+      UPDATE $database.$schema.$table SET definition = :definition WHERE id = :id
+      """.trimIndent()
+      jdbcTemplate.update(
+        sql,
+        namedParamsMap,
+      )
+      log.debug("Updated definition with id: ${definition.id} in {} ms.", stopwatch.time)
+    }
   }
 
   override fun deleteById(definitionId: String) {
@@ -135,17 +137,17 @@ class RedshiftProductDefinitionRepository(
     try {
       val stopwatch = StopWatch.createStarted()
       val jdbcTemplate = JdbcTemplate(dataSource)
-      val sql = "SELECT ORIGINAL_BODY FROM $database.$schema.$table WHERE ID=?"
+      val sql = "SELECT DEFINITION FROM $database.$schema.$table WHERE ID=?"
       log.debug("Retrieving original_body with id $definitionId from Redshift.")
       log.debug("SQL query: $sql")
       val originalBody = jdbcTemplate.queryForObject(
         sql,
         { rs, _ ->
-          rs.getString("original_body")
+          rs.getString("definition")
         },
         definitionId,
       )
-      log.debug("Retrieved original_body with definition id: $definitionId from Redshift in {} ms.", stopwatch.time)
+      log.debug("Retrieved original body with definition id: $definitionId from Redshift in {} ms.", stopwatch.time)
       return originalBody
     } catch (e: EmptyResultDataAccessException) {
       throw DefinitionNotFoundException("Invalid report id provided: $definitionId")
