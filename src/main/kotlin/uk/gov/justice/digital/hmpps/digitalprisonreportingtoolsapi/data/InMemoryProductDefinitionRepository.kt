@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data
 
 import jakarta.validation.ValidationException
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @ConditionalOnMissingBean(RedshiftProductDefinitionRepository::class)
 @Service
+@Primary
 class InMemoryProductDefinitionRepository(identifiedHelper: IdentifiedHelper) :
   AbstractProductDefinitionRepository(identifiedHelper),
   CrudProductDefinitionRepository {
