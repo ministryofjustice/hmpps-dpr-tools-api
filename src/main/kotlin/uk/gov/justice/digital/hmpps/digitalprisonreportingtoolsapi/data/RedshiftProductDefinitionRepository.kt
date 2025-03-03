@@ -11,8 +11,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
@@ -86,23 +84,21 @@ class RedshiftProductDefinitionRepository(
   }
 
   override fun save(definition: ProductDefinition, originalBody: String) {
-    val jdbcTemplate = NamedParameterJdbcTemplate(dataSource)
-    val namedParamsMap = MapSqlParameterSource()
-    namedParamsMap.addValue("id", definition.id)
-    namedParamsMap.addValue("definition", originalBody)
-    val stopwatch = StopWatch.createStarted()
+    val jdbcTemplate = JdbcTemplate(dataSource)
     log.debug("Saving definition with id ${definition.id} into Redshift.")
-    val sql = """
-      BEGIN;
-      DELETE FROM $database.$schema.$table WHERE ID=:id;
-      INSERT INTO $database.$schema.$table (id, definition) VALUES (:id, :definition);
-      COMMIT;
-    """.trimIndent()
-    log.debug("SQL query: $sql")
-    jdbcTemplate.update(
-      sql,
-      namedParamsMap,
-    )
+    val stopwatch = StopWatch.createStarted()
+    val begin = "BEGIN;"
+    jdbcTemplate.execute(begin)
+    log.debug("SQL query: $begin")
+    val delete = "DELETE FROM $database.$schema.$table WHERE ID=?;"
+    log.debug("SQL query: $delete")
+    jdbcTemplate.update(delete, definition.id)
+    val insert = "INSERT INTO $database.$schema.$table (id, definition) VALUES (?,?);"
+    log.debug("SQL query: $insert")
+    jdbcTemplate.update(insert, definition.id, originalBody)
+    val commit = "COMIT;"
+    log.debug("SQL query: $commit")
+    jdbcTemplate.execute(commit)
     stopwatch.stop()
     log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
   }
@@ -110,14 +106,12 @@ class RedshiftProductDefinitionRepository(
   override fun deleteById(definitionId: String) {
     log.debug("Deleting definition with id $definitionId from Redshift.")
     val stopwatch = StopWatch.createStarted()
-    val jdbcTemplate = NamedParameterJdbcTemplate(dataSource)
+    val jdbcTemplate = JdbcTemplate(dataSource)
     val sql = "DELETE FROM $database.$schema.$table WHERE ID=?"
-    val namedParamsMap = MapSqlParameterSource()
-    namedParamsMap.addValue("id", definitionId)
     log.debug("SQL query: $sql")
     val deletedRows = jdbcTemplate.update(
       sql,
-      namedParamsMap,
+      definitionId,
     )
     stopwatch.stop()
     log.debug("Deleted $deletedRows rows with definition with ID: $definitionId from Redshift in {}.", stopwatch.time)
