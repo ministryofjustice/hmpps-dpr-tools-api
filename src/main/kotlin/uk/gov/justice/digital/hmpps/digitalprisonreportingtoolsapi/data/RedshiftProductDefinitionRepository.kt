@@ -13,7 +13,6 @@ import org.springframework.core.annotation.Order
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
@@ -85,20 +84,29 @@ class RedshiftProductDefinitionRepository(
     }
   }
 
-  @Transactional(rollbackFor = [Exception::class])
   override fun save(definition: ProductDefinition, originalBody: String) {
-    val jdbcTemplate = JdbcTemplate(dataSource)
-    log.debug("Saving definition with id ${definition.id} into Redshift.")
-    val stopwatch = StopWatch.createStarted()
-    val delete = "DELETE FROM $database.$schema.$table WHERE ID=?;"
-    log.debug("SQL query: $delete")
-    jdbcTemplate.update(delete, definition.id)
-    throw RuntimeException("Failed to save definition.")
-    val insert = "INSERT INTO $database.$schema.$table (id, definition) VALUES (?,?);"
-    log.debug("SQL query: $insert")
-    jdbcTemplate.update(insert, definition.id, originalBody)
-    stopwatch.stop()
-    log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
+    val connection = dataSource.connection
+    try {
+      connection.use { con ->
+        con.autoCommit = false
+        val jdbcTemplate = JdbcTemplate(dataSource)
+        log.debug("Saving definition with id ${definition.id} into Redshift.")
+        val stopwatch = StopWatch.createStarted()
+        val delete = "DELETE FROM $database.$schema.$table WHERE ID=?;"
+        log.debug("SQL query: $delete")
+        jdbcTemplate.update(delete, definition.id)
+        val insert = "INSERT INTO $database.$schema.$table (id, definition) VALUES (?,?);"
+        log.debug("SQL query: $insert")
+        jdbcTemplate.update(insert, definition.id, originalBody)
+        stopwatch.stop()
+        log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
+        con.commit()
+      }
+    } catch (e: Exception) {
+      connection.rollback()
+    } finally {
+      connection.autoCommit = true
+    }
   }
 
   @Order
