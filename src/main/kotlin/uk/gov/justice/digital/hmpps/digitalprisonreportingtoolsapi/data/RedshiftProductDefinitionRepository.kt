@@ -93,6 +93,7 @@ class RedshiftProductDefinitionRepository(
     val delete = "DELETE FROM $database.$schema.$table WHERE ID=?;"
     log.debug("SQL query: $delete")
     jdbcTemplate.update(delete, definition.id)
+    throw RuntimeException("Failed to save definition.")
     val insert = "INSERT INTO $database.$schema.$table (id, definition) VALUES (?,?);"
     log.debug("SQL query: $insert")
     jdbcTemplate.update(insert, definition.id, originalBody)
