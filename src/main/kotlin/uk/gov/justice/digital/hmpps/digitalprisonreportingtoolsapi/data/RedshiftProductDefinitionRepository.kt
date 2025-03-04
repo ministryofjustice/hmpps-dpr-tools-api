@@ -85,28 +85,22 @@ class RedshiftProductDefinitionRepository(
   }
 
   override fun save(definition: ProductDefinition, originalBody: String) {
-    val connection = dataSource.connection
-    try {
-      connection.use { con ->
-        con.autoCommit = false
-        val jdbcTemplate = JdbcTemplate(dataSource)
-        log.debug("Saving definition with id ${definition.id} into Redshift.")
-        val stopwatch = StopWatch.createStarted()
-        val delete = "DELETE FROM $database.$schema.$table WHERE ID=?;"
-        log.debug("SQL query: $delete")
-        jdbcTemplate.update(delete, definition.id)
-        val insert = "INSERT INTO $database.$schema.$table (id, definition) VALUES (?,?);"
-        log.debug("SQL query: $insert")
-        jdbcTemplate.update(insert, definition.id, originalBody)
-        stopwatch.stop()
-        log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
-        con.commit()
-      }
-    } catch (e: Exception) {
-      connection.rollback()
-    } finally {
-      connection.autoCommit = true
-    }
+    val jdbcTemplate = JdbcTemplate(dataSource)
+    log.debug("Saving definition with id ${definition.id} into Redshift.")
+    val stopwatch = StopWatch.createStarted()
+    val sql = """
+        MERGE INTO $database.$schema.$table
+        USING (SELECT '?' as ID, '?' as DEFINITION) as source
+        on $database.$schema.$table.ID = source.ID 
+        WHEN MATCHED THEN
+        UPDATE SET ID = source.ID, DEFINITION = source.DEFINITION
+        WHEN NOT MATCHED 
+        THEN INSERT VALUES (source.ID, source.DEFINITION)
+    """.trimIndent()
+    log.debug("SQL query: $sql")
+    jdbcTemplate.update(sql, definition.id, originalBody)
+    stopwatch.stop()
+    log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
   }
 
   @Order
