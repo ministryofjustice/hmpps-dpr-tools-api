@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.core.annotation.Order
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
@@ -83,26 +85,22 @@ class RedshiftProductDefinitionRepository(
     }
   }
 
+  @Transactional(rollbackFor = [Exception::class])
   override fun save(definition: ProductDefinition, originalBody: String) {
     val jdbcTemplate = JdbcTemplate(dataSource)
     log.debug("Saving definition with id ${definition.id} into Redshift.")
     val stopwatch = StopWatch.createStarted()
-    val begin = "BEGIN;"
-    jdbcTemplate.execute(begin)
-    log.debug("SQL query: $begin")
     val delete = "DELETE FROM $database.$schema.$table WHERE ID=?;"
     log.debug("SQL query: $delete")
     jdbcTemplate.update(delete, definition.id)
     val insert = "INSERT INTO $database.$schema.$table (id, definition) VALUES (?,?);"
     log.debug("SQL query: $insert")
     jdbcTemplate.update(insert, definition.id, originalBody)
-    val commit = "COMIT;"
-    log.debug("SQL query: $commit")
-    jdbcTemplate.execute(commit)
     stopwatch.stop()
     log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
   }
 
+  @Order
   override fun deleteById(definitionId: String) {
     log.debug("Deleting definition with id $definitionId from Redshift.")
     val stopwatch = StopWatch.createStarted()
