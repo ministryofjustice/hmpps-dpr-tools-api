@@ -81,6 +81,8 @@ dpr:
       role: ${AUTHORISED_ROLES}
     definition:
       locations: unused.json
+      redshift:
+        enabled: true
     redshiftdataapi:
       secretarn: ${REDSHIFT_DATA_SECRETARN}
       clusterid: ${REDSHIFT_DATA_CLUSTER_ID}

@@ -1,6 +1,8 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data
 
 import jakarta.validation.ValidationException
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
@@ -9,8 +11,12 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.SingleR
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.DefinitionNotFoundException
 import java.util.concurrent.ConcurrentHashMap
 
+@ConditionalOnMissingBean(RedshiftProductDefinitionRepository::class)
 @Service
-class InMemoryProductDefinitionRepository(identifiedHelper: IdentifiedHelper) : AbstractProductDefinitionRepository(identifiedHelper) {
+@Primary
+class InMemoryProductDefinitionRepository(identifiedHelper: IdentifiedHelper) :
+  AbstractProductDefinitionRepository(identifiedHelper),
+  CrudProductDefinitionRepository {
 
   private val definitions: ConcurrentHashMap<String, Pair<ProductDefinition, String>> = ConcurrentHashMap()
 
@@ -26,13 +32,13 @@ class InMemoryProductDefinitionRepository(identifiedHelper: IdentifiedHelper) : 
     }
   }
 
-  fun save(definition: ProductDefinition, originalBody: String) {
+  override fun save(definition: ProductDefinition, originalBody: String) {
     definitions[definition.id] = Pair(definition, originalBody)
   }
 
-  fun deleteById(definitionId: String) {
+  override fun deleteById(definitionId: String) {
     definitions.remove(definitionId)
   }
 
-  fun getOriginalBody(definitionId: String) = definitions[definitionId]?.second
+  override fun getOriginalBody(definitionId: String) = definitions[definitionId]?.second
 }

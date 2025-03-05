@@ -41,3 +41,6 @@ dpr:
       rolesessionname: dpr-cross-account-role-session
       s3location: dpr-working-development/reports
       athenaworkgroup: athenaWorkgroup
+    definition:
+      redshift:
+        enabled: false
