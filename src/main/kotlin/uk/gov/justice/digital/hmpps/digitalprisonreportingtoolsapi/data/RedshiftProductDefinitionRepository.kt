@@ -90,7 +90,7 @@ class RedshiftProductDefinitionRepository(
     val stopwatch = StopWatch.createStarted()
     val sql = """
         MERGE INTO $database.$schema.$table
-        USING (SELECT cast(? as VARCHAR(max)) as ID, cast(? as VARCHAR(max)) as DEFINITION) as source
+        USING (SELECT cast(? as VARCHAR(max)) as ID, cast(? as VARCHAR(65535)) as DEFINITION) as source
         on $database.$schema.$table.ID = source.ID 
         WHEN MATCHED THEN
         UPDATE SET ID = source.ID, DEFINITION = source.DEFINITION
