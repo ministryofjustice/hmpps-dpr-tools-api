@@ -98,7 +98,7 @@ class RedshiftProductDefinitionRepository(
         THEN INSERT VALUES (source.ID, source.DEFINITION)
     """.trimIndent()
     log.debug("SQL query: $sql")
-    jdbcTemplate.update(sql, "'$definition.id'", originalBody)
+    jdbcTemplate.update(sql, "'${definition.id}'", originalBody)
     stopwatch.stop()
     log.debug("Saved definition into Redshift in {} ms.", stopwatch.time)
   }
