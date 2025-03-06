@@ -42,5 +42,4 @@ dpr:
       s3location: dpr-working-development/reports
       athenaworkgroup: athenaWorkgroup
     definition:
-      redshift:
-        enabled: false
+      repository: memory
