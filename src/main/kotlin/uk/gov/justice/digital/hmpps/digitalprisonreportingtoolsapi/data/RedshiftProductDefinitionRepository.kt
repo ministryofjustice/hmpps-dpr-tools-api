@@ -21,7 +21,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.config.Redshi
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.DefinitionNotFoundException
 import javax.sql.DataSource
 
-@ConditionalOnProperty("dpr.lib.definition.redshift.enabled", havingValue = "true")
+@ConditionalOnProperty("dpr.lib.definition.repository", havingValue = "redshift")
 @ConditionalOnBean(RedshiftDataSourceConfiguration::class)
 @Service
 class RedshiftProductDefinitionRepository(
