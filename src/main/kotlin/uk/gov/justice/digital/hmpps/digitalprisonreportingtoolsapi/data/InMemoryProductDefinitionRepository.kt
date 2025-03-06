@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data
 
 import jakarta.validation.ValidationException
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProductDefinitionRepository
@@ -11,7 +11,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.SingleR
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.DefinitionNotFoundException
 import java.util.concurrent.ConcurrentHashMap
 
-@ConditionalOnMissingBean(RedshiftProductDefinitionRepository::class)
+@ConditionalOnProperty("dpr.lib.definition.repository", havingValue = "memory")
 @Service
 @Primary
 class InMemoryProductDefinitionRepository(identifiedHelper: IdentifiedHelper) :
