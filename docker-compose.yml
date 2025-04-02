@@ -13,5 +13,35 @@ services:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev
 
+  hmpps-auth:
+    image: quay.io/hmpps/hmpps-auth:latest
+    container_name: hmpps-auth
+    networks:
+      - hmpps
+    ports:
+      - "8090:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/auth/health/ping" ]
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
+#      - DELIUS_ENABLED=false
+#      - NOMIS_ENDPOINT_URL=http://nomis-user-roles-api:8080
+#      - NOMIS_ENABLED=true
+
+
+#  preview-tool-db:
+#    image: postgres:16
+#    container_name: preview-tool-db-postgres
+#    networks:
+#      - hmpps
+#    restart: unless-stopped
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      - POSTGRES_PASSWORD=password
+#      - POSTGRES_USER=user
+#      - POSTGRES_DB=preview-tool
+
 networks:
   hmpps:
