@@ -17,12 +17,11 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProdu
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.SingleReportProductDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.config.RedshiftDataSourceConfiguration
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.DefinitionNotFoundException
 import javax.sql.DataSource
 
 @ConditionalOnProperty("dpr.lib.definition.repository", havingValue = "redshift")
-@ConditionalOnBean(RedshiftDataSourceConfiguration::class)
+//@ConditionalOnBean(RedshiftDataSourceConfiguration::class)
 @Service
 class RedshiftProductDefinitionRepository(
   identifiedHelper: IdentifiedHelper,
@@ -38,7 +37,7 @@ class RedshiftProductDefinitionRepository(
   }
 
   @Autowired
-  @Qualifier("redshift")
+  @Qualifier("activities")
   lateinit var dataSource: DataSource
 
   override fun getProductDefinitions(path: String?): List<ProductDefinition> {

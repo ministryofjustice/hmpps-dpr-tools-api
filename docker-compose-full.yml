@@ -1,0 +1,43 @@
+version: "3"
+services:
+  hmpps-dpr-tools-api:
+    build:
+      context: .
+    network_mode: "host"
+    container_name: hmpps-dpr-tools-api
+    ports:
+      - "8091:8090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health/ping"]
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_PROFILES_ACTIVE=dev,local-docker
+
+  preview-tool-db:
+    image: postgres
+    container_name: postgres-database
+    networks:
+        - hmpps
+    restart: unless-stopped
+    ports:
+        - "5432:5432"
+    environment:
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_DB=postgres
+
+  hmpps-manage-users-api:
+    image: quay.io/hmpps/hmpps-manage-users-api:latest
+    container_name: hmpps-manage-users-api
+    depends_on:
+      - hmpps-auth
+    ports:
+      - "9091:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ping" ]
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_PROFILES_ACTIVE=dev,local-docker
+
+networks:
+  hmpps:

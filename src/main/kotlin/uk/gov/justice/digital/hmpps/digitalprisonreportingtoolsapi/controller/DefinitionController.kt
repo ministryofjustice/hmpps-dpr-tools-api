@@ -51,4 +51,11 @@ class DefinitionController(
   )
   @GetMapping("/definitions/original/{definitionId}")
   fun getOriginalDefinition(@PathVariable definitionId: String) = definitionService.getOriginalBody(definitionId)
+
+  @Operation(
+    description = "Get the original definition",
+    security = [ SecurityRequirement(name = "bearer-jwt") ],
+  )
+  @GetMapping("/")
+  fun getOriginalDefinition() = "Hello"
 }

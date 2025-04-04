@@ -1,17 +1,49 @@
 version: "3"
 services:
+  auth-db:
+    image: postgres:16
+    container_name: auth-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=auth-db
+
+#  hmpps-auth:
+##    image: quay.io/hmpps/hmpps-auth:latest
+#    build:
+#      context: /Users/madhuri.mahesh/Documents/repo/hmpps-auth
+#    container_name: hmpps-auth
+#    depends_on:
+#      - auth-db
+#    ports:
+#      - '9090:8080'
+#    healthcheck:
+#      test: [ 'CMD', 'curl', '-f', 'http://localhost:8080/auth/health' ]
+#    environment:
+#      - SERVER_PORT=8080
+#      - SPRING_PROFILES_ACTIVE=dev,local-postgres,dpr-tools-api
+#      - MANAGE_USERS_API_ENDPOINT_URL=http://hmpps-dpr-tools-api:8080
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://auth-db:5432/auth-db
+#      - HOSTNAME=hmpps-auth
+#      - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
+
   hmpps-dpr-tools-api:
     build:
       context: .
     network_mode: "host"
     container_name: hmpps-dpr-tools-api
+    depends_on:
+      - auth-db
     ports:
       - "8081:8080"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
     environment:
       - SERVER_PORT=8080
-      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_PROFILES_ACTIVE=dev,local-docker
 
 networks:
   hmpps:
