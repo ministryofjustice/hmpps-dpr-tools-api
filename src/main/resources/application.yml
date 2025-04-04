@@ -4,15 +4,16 @@ info.app:
 
 customdatasource:
   activities:
-    url: ${ACTIVITIES_JDBC_URL}
-    username: ${ACTIVITIES_JDBC_USER}
-    password: ${ACTIVITIES_JDBC_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
     driver: org.postgresql.Driver
-  redshift:
-    url: ${REDSHIFT_JDBC_URL}
-    username: ${REDSHIFT_JDBC_USER}
-    password: ${REDSHIFT_JDBC_PASSWORD}
-    driver: com.amazon.redshift.jdbc.Driver
+    enabled: true
+#  redshift:
+#    url: ${REDSHIFT_JDBC_URL}
+#    username: ${REDSHIFT_JDBC_USER}
+#    password: ${REDSHIFT_JDBC_PASSWORD}
+#    driver: com.amazon.redshift.jdbc.Driver
 
 spring:
   application:
@@ -35,7 +36,42 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${hmpps.auth.url}/.well-known/jwks.json
+          jwk-set-uri: http://localhost:9090/auth/.well-known/jwks.json
+
+#      client:
+#        provider:
+#          hmpps-auth:
+#            token-uri: ${hmpps-auth.endpoint.url}/oauth/token
+#        registration:
+#          audit-api:
+#            provider: hmpps-auth
+#            client-id: ${hmpps-auth.client.client-id}
+#            client-secret: ${hmpps-auth.client.client-secret}
+#            authorization-grant-type: client_credentials
+#
+#authorization-server:
+#  token:
+#    endpoint:
+#      url: http://localhost:9090/auth/oauth/token
+#
+#hmpps-auth:
+#  external:
+#    endpoint:
+#      url: http://localhost:9090/auth
+#  endpoint:
+#    url: http://localhost:9090/auth
+#    timeout: 1s
+#  enabled: false
+#  client:
+#    access-token-uri: ${authorization-server.token.endpoint.url}
+#    authentication-scheme: header
+#    client-authentication-scheme: header
+#    client-id: hmpps-manage-users-api
+#    client-secret: clientsecret
+#  health.timeout: 1s
+#  endpoint.timeout: 8s
+#  max-retry-attempts: 2
+#  sync-user: false
 
 server:
   port: 8080
@@ -50,6 +86,8 @@ server:
   shutdown: graceful
   error:
     include-message: always
+
+
 
 management:
   endpoints:
@@ -76,22 +114,22 @@ springdoc:
 dpr:
   lib:
     caseloads:
-      host: ${ME_CASELOADS_API_HOST}
+      host: http//localhost:9090
     user:
-      role: ${AUTHORISED_ROLES}
+      role: ROLE_PRISONS_REPORTING_TOOLS
     definition:
       locations: unused.json
       repository: memory
     redshiftdataapi:
-      secretarn: ${REDSHIFT_DATA_SECRETARN}
-      clusterid: ${REDSHIFT_DATA_CLUSTER_ID}
-      database: ${REDSHIFT_DATA_DB}
+      secretarn: REDSHIFT_DATA_SECRETARN
+      clusterid: REDSHIFT_DATA_CLUSTER_ID
+      database: REDSHIFT_DATA_DB
       tokenrefreshdurationsec: 3600
-      s3location: ${REDSHIFT_DATA_S3_LOCATION}
+#      s3location: ${REDSHIFT_DATA_S3_LOCATION}
       athenaworkgroup: dpr-generic-athena-workgroup
     aws:
       sts:
-        enabled: true
+        enabled: false
 
 logging:
   level:

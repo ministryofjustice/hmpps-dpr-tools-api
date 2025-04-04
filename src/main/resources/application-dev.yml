@@ -1,0 +1,14 @@
+server:
+  shutdown: immediate
+  port: 8081
+
+hmpps-auth:
+  external:
+    endpoint:
+      url: http://localhost:9090/auth
+  endpoint:
+    url: http://localhost:9090/auth
+  enabled: true
+  client:
+    client-id: hmpps-manage-users-api
+    client-secret: clientsecret
