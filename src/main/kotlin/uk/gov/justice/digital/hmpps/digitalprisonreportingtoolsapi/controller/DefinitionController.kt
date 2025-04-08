@@ -5,9 +5,20 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import software.amazon.awssdk.services.redshiftdata.RedshiftDataClient
-import software.amazon.awssdk.services.redshiftdata.model.*
+import software.amazon.awssdk.services.redshiftdata.model.DescribeStatementRequest
+import software.amazon.awssdk.services.redshiftdata.model.DescribeStatementResponse
+import software.amazon.awssdk.services.redshiftdata.model.ExecuteStatementRequest
+import software.amazon.awssdk.services.redshiftdata.model.GetStatementResultRequest
+import software.amazon.awssdk.services.redshiftdata.model.GetStatementResultResponse
+import software.amazon.awssdk.services.redshiftdata.model.StatusString
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.DefinitionService
@@ -63,11 +74,11 @@ class DefinitionController(
   @GetMapping("/redshift/test/{column}")
   fun testRedshift(@PathVariable column: String, @RequestParam executionId: String?): String {
     val whereClause = executionId?.let { "WHERE current_execution_id = $executionId " } ?: ""
-    val result  = queryRedshiftAndGetResult("SELECT * from admin.execution_manager $whereClause;")
+    val result = queryRedshiftAndGetResult("SELECT * from admin.execution_manager $whereClause;")
     return getData("column", 0, result)
   }
 
-  private fun queryRedshift(query:String): String {
+  private fun queryRedshift(query: String): String {
     val statementRequest = ExecuteStatementRequest.builder()
       .clusterIdentifier("dpr-redshift-development")
       .database("datamart")
@@ -101,13 +112,11 @@ class DefinitionController(
     return redshiftDataClient.getStatementResult(getStatementResultRequest)
   }
 
-  private fun queryRedshiftAndGetResult(query: String): GetStatementResultResponse {
-    return getRedshiftStatementResult(queryRedshift(query))
-  }
+  private fun queryRedshiftAndGetResult(query: String): GetStatementResultResponse = getRedshiftStatementResult(queryRedshift(query))
 
   private fun getData(columnName: String, rowNumber: Int, getStatementResultResponse: GetStatementResultResponse): String {
     val columnNameToResultIndex = mutableMapOf<String, Int>()
-    getStatementResultResponse.columnMetadata().forEachIndexed{ i, colMetaData -> columnNameToResultIndex[colMetaData.name()] = i}
+    getStatementResultResponse.columnMetadata().forEachIndexed { i, colMetaData -> columnNameToResultIndex[colMetaData.name()] = i }
     return getStatementResultResponse.records()[rowNumber][columnNameToResultIndex[columnName]!!].stringValue()
   }
 }
