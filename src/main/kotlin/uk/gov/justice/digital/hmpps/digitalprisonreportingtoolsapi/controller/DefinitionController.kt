@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import software.amazon.awssdk.services.athena.AthenaClient
+import software.amazon.awssdk.services.athena.model.QueryExecutionContext
+import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
 import software.amazon.awssdk.services.redshiftdata.RedshiftDataClient
 import software.amazon.awssdk.services.redshiftdata.model.DescribeStatementRequest
 import software.amazon.awssdk.services.redshiftdata.model.DescribeStatementResponse
@@ -29,6 +32,7 @@ class DefinitionController(
   val definitionService: DefinitionService,
   val dprDefinitionGson: Gson,
   val redshiftDataClient: RedshiftDataClient,
+  val athenaClient: AthenaClient,
 ) {
 
   companion object {
@@ -75,9 +79,11 @@ class DefinitionController(
   fun testRedshift(@PathVariable column: String, @RequestParam executionId: String?): String {
     val whereClause = executionId?.let { "WHERE current_execution_id = '$executionId' " } ?: ""
     val result = queryRedshiftAndGetResult("SELECT * from admin.execution_manager $whereClause;")
-    val data = getData(column, 0, result)
-    log.debug("Data is: {}", data)
-    return data
+    val query = getData(column, 0, result)
+    log.debug("Query is: {}", query)
+    val executionId = queryAthena(query)
+    log.debug("Execution ID is {}", executionId)
+    return "Query: $query  \n\n execution_id: $executionId"
   }
 
   private fun queryRedshift(query: String): String {
@@ -120,5 +126,23 @@ class DefinitionController(
     val columnNameToResultIndex = mutableMapOf<String, Int>()
     getStatementResultResponse.columnMetadata().forEachIndexed { i, colMetaData -> columnNameToResultIndex[colMetaData.name()] = i }
     return getStatementResultResponse.records()[rowNumber][columnNameToResultIndex[columnName]!!].stringValue()
+  }
+
+  private fun queryAthena(
+    query: String,
+  ): String {
+    val queryExecutionContext = QueryExecutionContext.builder()
+      .database("reports")
+      .catalog("AwsDataCatalog")
+      .build()
+    val startQueryExecutionRequest = StartQueryExecutionRequest.builder()
+      .queryString(query)
+      .queryExecutionContext(queryExecutionContext)
+      .workGroup("dpr-generic-athena-workgroup")
+      .build()
+    log.debug("Athena query: {}", query)
+    val queryExecutionId = athenaClient
+      .startQueryExecution(startQueryExecutionRequest).queryExecutionId()
+    return queryExecutionId
   }
 }
