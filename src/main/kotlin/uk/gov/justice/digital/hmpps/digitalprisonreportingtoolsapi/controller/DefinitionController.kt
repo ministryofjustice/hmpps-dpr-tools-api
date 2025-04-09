@@ -75,7 +75,9 @@ class DefinitionController(
   fun testRedshift(@PathVariable column: String, @RequestParam executionId: String?): String {
     val whereClause = executionId?.let { "WHERE current_execution_id = $executionId " } ?: ""
     val result = queryRedshiftAndGetResult("SELECT * from admin.execution_manager $whereClause;")
-    return getData(column, 0, result)
+    val data = getData(column, 0, result)
+    log.debug("Data is: {}", data)
+    return data
   }
 
   private fun queryRedshift(query: String): String {
