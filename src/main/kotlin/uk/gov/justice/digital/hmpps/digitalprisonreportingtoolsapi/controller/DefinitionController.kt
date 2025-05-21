@@ -85,11 +85,11 @@ class DefinitionController(
     return "Column Data: $columnData  \n\n execution_id: $executionId"
   }
 
-  @GetMapping("/redshift/update/{column}")
-  fun updateRedshift(@PathVariable column: String, @RequestParam executionId: String?): String {
-    val whereClause = executionId?.let { "WHERE current_execution_id = '$executionId' " } ?: ""
+  @GetMapping("/redshift/update/{executionId}")
+  fun updateRedshift(@PathVariable executionId: String, @RequestParam state: String): String {
     log.debug("Execution ID is {}", executionId)
-    val result = queryRedshiftAndGetResult("UPDATE current_state from admin.execution_manager $whereClause;")
+    val update = "UPDATE datamart.admin.execution_manager SET current_state = '$state' WHERE current_execution_id = '$executionId'"
+    val result = queryRedshiftAndGetResult(update)
     result.totalNumRows()
     log.debug("Has records: {}", result.hasRecords())
     log.debug("Total rows: {}", result.totalNumRows())
