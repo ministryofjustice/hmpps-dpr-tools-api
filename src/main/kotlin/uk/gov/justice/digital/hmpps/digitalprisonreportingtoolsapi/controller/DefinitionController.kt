@@ -75,15 +75,25 @@ class DefinitionController(
     description = "Testing redshift retrieval",
     security = [ SecurityRequirement(name = "bearer-jwt") ],
   )
-  @GetMapping("/redshift/test/{column}")
-  fun testRedshift(@PathVariable column: String, @RequestParam executionId: String?): String {
+  @GetMapping("/redshift/select/{column}/{executionId}")
+  fun selectRedshift(@PathVariable column: String, @PathVariable executionId: String?): String {
     val whereClause = executionId?.let { "WHERE current_execution_id = '$executionId' " } ?: ""
     val result = queryRedshiftAndGetResult("SELECT * from admin.execution_manager $whereClause;")
-    val query = getData(column, 0, result)
-    log.debug("Query is: {}", query)
-    val executionId = queryAthena(query)
+    val columnData = getData(column, 0, result)
+    log.debug("Column Data is: {}", columnData)
     log.debug("Execution ID is {}", executionId)
-    return "Query: $query  \n\n execution_id: $executionId"
+    return "Column Data: $columnData  \n\n execution_id: $executionId"
+  }
+
+  @GetMapping("/redshift/update/{column}")
+  fun updateRedshift(@PathVariable column: String, @RequestParam executionId: String?): String {
+    val whereClause = executionId?.let { "WHERE current_execution_id = '$executionId' " } ?: ""
+    log.debug("Execution ID is {}", executionId)
+    val result = queryRedshiftAndGetResult("UPDATE current_state from admin.execution_manager $whereClause;")
+    result.totalNumRows()
+    log.debug("Has records: {}", result.hasRecords())
+    log.debug("Total rows: {}", result.totalNumRows())
+    return "execution_id: $executionId, has_records: ${result.hasRecords()}, total_rows: ${result.totalNumRows()}"
   }
 
   private fun queryRedshift(query: String): String {
