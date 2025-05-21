@@ -89,14 +89,11 @@ class DefinitionController(
   fun updateRedshift(@PathVariable executionId: String, @RequestParam state: String): String {
     log.debug("Execution ID is {}", executionId)
     val update = "UPDATE datamart.admin.execution_manager SET current_state = '$state' WHERE current_execution_id = '$executionId'"
-    val result = queryRedshiftAndGetResult(update)
-    result.totalNumRows()
-    log.debug("Has records: {}", result.hasRecords())
-    log.debug("Total rows: {}", result.totalNumRows())
-    return "execution_id: $executionId, has_records: ${result.hasRecords()}, total_rows: ${result.totalNumRows()}"
+    val status = queryRedshift(update)
+    return "execution_id: $executionId, has_result_set: ${status.hasResulSet}, result_rows: ${status.resultRows}, result_size: ${status.resultSize}"
   }
 
-  private fun queryRedshift(query: String): String {
+  private fun queryRedshift(query: String): Status {
     val statementRequest = ExecuteStatementRequest.builder()
       .clusterIdentifier("dpr-redshift-development")
       .database("datamart")
@@ -120,8 +117,13 @@ class DefinitionController(
       }
     }
     while (describeStatementResponse.status() != StatusString.FINISHED)
-    return executionId
+    log.debug("Has result set: {}", describeStatementResponse.hasResultSet())
+    log.debug("Total result rows: {}", describeStatementResponse.resultRows())
+    log.debug("Total result size: {}", describeStatementResponse.resultSize())
+    return Status(describeStatementResponse.hasResultSet(), describeStatementResponse.resultRows(), describeStatementResponse.resultSize(), executionId)
   }
+
+  data class Status(val hasResulSet: Boolean, val resultRows: Long, val resultSize: Long, val executionId: String)
 
   private fun getRedshiftStatementResult(executionId: String): GetStatementResultResponse {
     val getStatementResultRequest = GetStatementResultRequest.builder()
@@ -130,7 +132,7 @@ class DefinitionController(
     return redshiftDataClient.getStatementResult(getStatementResultRequest)
   }
 
-  private fun queryRedshiftAndGetResult(query: String): GetStatementResultResponse = getRedshiftStatementResult(queryRedshift(query))
+  private fun queryRedshiftAndGetResult(query: String): GetStatementResultResponse = getRedshiftStatementResult(queryRedshift(query).executionId)
 
   private fun getData(columnName: String, rowNumber: Int, getStatementResultResponse: GetStatementResultResponse): String {
     val columnNameToResultIndex = mutableMapOf<String, Int>()
