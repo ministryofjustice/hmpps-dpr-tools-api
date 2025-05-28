@@ -90,7 +90,7 @@ class DefinitionController(
     log.debug("Execution ID is {}", executionId)
     val update = "UPDATE datamart.admin.execution_manager SET current_state = '$state' WHERE current_execution_id = '$executionId'"
     val status = queryRedshift(update)
-    //Only result rows have a value on updates
+    // Only result rows have a value on updates
     return "execution_id: $executionId, has_result_set: ${status.hasResulSet}, result_rows: ${status.resultRows}, result_size: ${status.resultSize}"
   }
 
