@@ -7,6 +7,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Product
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ProductDefinitionTokenPolicyChecker
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ReportDefinitionMapper
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.alert.AlertCategoryCacheService
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.estcodesandwings.EstablishmentCodesToWingsCacheService
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data.CrudProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.InvalidDefinitionException
@@ -18,8 +19,9 @@ class DefinitionService(
   identifiedHelper: IdentifiedHelper,
   establishmentCodesToWingsCacheService: EstablishmentCodesToWingsCacheService,
   productDefinitionTokenPolicyChecker: ProductDefinitionTokenPolicyChecker,
+  alertCategoryCacheService: AlertCategoryCacheService,
 ) {
-  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository, productDefinitionTokenPolicyChecker, identifiedHelper), identifiedHelper, establishmentCodesToWingsCacheService)
+  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository, productDefinitionTokenPolicyChecker, identifiedHelper), identifiedHelper, establishmentCodesToWingsCacheService, alertCategoryCacheService)
 
   suspend fun saveAndValidate(
     definition: ProductDefinition,
