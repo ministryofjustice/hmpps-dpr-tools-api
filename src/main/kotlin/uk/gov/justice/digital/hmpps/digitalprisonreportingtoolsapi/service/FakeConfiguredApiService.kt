@@ -22,7 +22,7 @@ class FakeConfiguredApiService(
     selectedPage: Long,
     pageSize: Long,
     sortColumn: String?,
-    sortedAsc: Boolean,
+    sortedAsc: Boolean?,
     userToken: DprAuthAwareAuthenticationToken?,
     reportFieldId: Set<String>?,
     prefix: String?,
