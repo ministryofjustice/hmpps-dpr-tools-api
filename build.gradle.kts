@@ -18,8 +18,8 @@ dependencies {
   implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:9.4.0")
   implementation("com.google.code.gson:gson:2.11.0")
   implementation("software.amazon.awssdk:redshiftdata:2.31.24")
-  implementation("software.amazon.awssdk:athena:2.31.65")
-  implementation("software.amazon.awssdk:sts:2.31.65")
+  implementation("software.amazon.awssdk:athena:2.32.21")
+  implementation("software.amazon.awssdk:sts:2.32.21")
 
   // Security
   implementation("org.springframework.boot:spring-boot-starter-security")
