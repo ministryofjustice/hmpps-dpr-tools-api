@@ -13,6 +13,15 @@ customdatasource:
     username: ${REDSHIFT_JDBC_USER}
     password: ${REDSHIFT_JDBC_PASSWORD}
     driver: com.amazon.redshift.jdbc.Driver
+  missingreport:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${MISSING_REPORT_CLUSTER_URL}:{MISSING_REPORT_CLUSTER_PORT}/missingreportsubmissions
+    username: ${MISSING_REPORT_USERNAME}
+    password: ${MISSING_REPORT_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      pool-name: missing-report
 
 spring:
   application:
