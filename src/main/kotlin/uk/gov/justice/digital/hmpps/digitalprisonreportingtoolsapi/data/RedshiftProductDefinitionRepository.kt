@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinitionSummary
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.SingleReportProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.config.RedshiftDataSourceConfiguration
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.DefinitionNotFoundException
@@ -41,14 +42,14 @@ class RedshiftProductDefinitionRepository(
   @Qualifier("redshift")
   lateinit var dataSource: DataSource
 
-  override fun getProductDefinitions(path: String?): List<ProductDefinition> {
+  override fun getProductDefinitions(path: String?): List<ProductDefinitionSummary> {
     log.debug("Fetching definitions from Redshift.")
     val stopwatch = StopWatch.createStarted()
     val jdbcTemplate = JdbcTemplate(dataSource)
-    val definitions: List<ProductDefinition> = jdbcTemplate.queryForList(
+    val definitions: List<ProductDefinitionSummary> = jdbcTemplate.queryForList(
       "SELECT DEFINITION FROM $database.$schema.$table;",
     ).map {
-      it.entries.associate { (k, v) -> k to dprDefinitionGson.fromJson(v as String, ProductDefinition::class.java) }
+      it.entries.associate { (k, v) -> k to dprDefinitionGson.fromJson(v as String, ProductDefinitionSummary::class.java) }
     }.flatMap { it.values }
     stopwatch.stop()
     log.debug("Retrieved definitions from Redshift in {} ms.", stopwatch.time)
