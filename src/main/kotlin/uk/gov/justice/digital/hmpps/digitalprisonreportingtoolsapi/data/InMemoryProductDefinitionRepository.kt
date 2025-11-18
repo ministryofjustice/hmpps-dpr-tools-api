@@ -6,8 +6,7 @@ import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.SingleReportProductDefinition
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.*
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.DefinitionNotFoundException
 import java.util.concurrent.ConcurrentHashMap
 
@@ -20,7 +19,7 @@ class InMemoryProductDefinitionRepository(identifiedHelper: IdentifiedHelper) :
 
   private val definitions: ConcurrentHashMap<String, Pair<ProductDefinition, String>> = ConcurrentHashMap()
 
-  override fun getProductDefinitions(path: String?): List<ProductDefinition> = definitions.values.map { it.first }.toList()
+  override fun getProductDefinitions(path: String?): List<ProductDefinitionSummary> = definitions.values.map { it.first }.map{it.mapToSummary()}.toList()
 
   override fun getProductDefinition(definitionId: String, dataProductDefinitionsPath: String?): ProductDefinition = definitions.getOrElse(definitionId) { throw DefinitionNotFoundException("Invalid report id provided: $definitionId") }.first
 
@@ -41,4 +40,29 @@ class InMemoryProductDefinitionRepository(identifiedHelper: IdentifiedHelper) :
   }
 
   override fun getOriginalBody(definitionId: String) = definitions[definitionId]?.second
+
+  fun ProductDefinition.mapToSummary():ProductDefinitionSummary {
+    return ProductDefinitionSummary(
+      id = this.id,
+      name = this.name,
+      description = this.description,
+      metadata = this.metadata,
+      path = this.path,
+      dataset = this.dataset,
+      report = mapReports(this.report),
+      policy = this.policy,
+      dashboard = this.dashboard,
+    )
+  }
+
+  private fun mapReports(reports: List<Report>): List<ReportLite> =
+   reports.map{ report ->
+     ReportLite(
+       id = report.id,
+       name = report.name,
+       description = report.description,
+       dataset = report.dataset,
+       render = report.render
+     )
+   }.toList()
 }
