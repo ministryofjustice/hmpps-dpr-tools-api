@@ -4,6 +4,7 @@ import jakarta.validation.ValidationException
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.common.model.LoadType
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AbstractProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
@@ -64,6 +65,7 @@ class InMemoryProductDefinitionRepository(identifiedHelper: IdentifiedHelper) :
       description = report.description,
       dataset = report.dataset,
       render = report.render,
+      loadType = report.loadType ?: LoadType.ASYNC
     )
   }.toList()
 }
