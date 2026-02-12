@@ -64,6 +64,7 @@ class InMemoryProductDefinitionRepository(identifiedHelper: IdentifiedHelper) :
       description = report.description,
       dataset = report.dataset,
       render = report.render,
+      loadType = report.loadType,
     )
   }.toList()
 }
