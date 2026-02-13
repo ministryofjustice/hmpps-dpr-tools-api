@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -34,6 +35,8 @@ class DefinitionController(
     val definition = dprDefinitionGson.fromJson(body, ProductDefinition::class.java)
     println("Controller token class: ${authentication.javaClass}")
     println("Controller token class name: ${authentication.javaClass.name}")
+    val principal = SecurityContextHolder.getContext().authentication
+    println("SecurityContext authentication class: ${principal.javaClass.name}")
     definitionService.saveAndValidate(definition, authentication, body)
   }
 
