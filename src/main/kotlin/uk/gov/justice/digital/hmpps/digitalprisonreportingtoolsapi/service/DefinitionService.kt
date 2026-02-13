@@ -25,7 +25,7 @@ class DefinitionService(
 
   suspend fun saveAndValidate(
     definition: ProductDefinition,
-    authenticationToken: DprAuthAwareAuthenticationToken,
+    authenticationToken: DprAuthAwareAuthenticationToken?,
     originalBody: String,
   ) {
     try {

@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -29,11 +30,10 @@ class DefinitionController(
     @RequestBody
     body: String,
     @PathVariable definitionId: String,
-    authentication: DprAuthAwareAuthenticationToken,
+    authentication: Authentication,
   ) {
     val definition = dprDefinitionGson.fromJson(body, ProductDefinition::class.java)
-
-    definitionService.saveAndValidate(definition, authentication, body)
+    definitionService.saveAndValidate(definition, authentication as DprAuthAwareAuthenticationToken?, body)
   }
 
   @Operation(
