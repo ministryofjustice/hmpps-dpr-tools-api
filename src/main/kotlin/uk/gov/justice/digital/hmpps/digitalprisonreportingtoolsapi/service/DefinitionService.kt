@@ -32,10 +32,12 @@ class DefinitionService(
       definition.id.let {
         repository.save(definition, originalBody)
       }
-      definition.report
+      val map1 = definition.report
         .map { report -> repository.getSingleReportProductDefinition(definitionId = definition.id, report.id) }
-        // Attempt mapping to assert references are correct
-        .map { mapper.mapReport(it, userToken = authenticationToken) }
+      println("AuthenticationToken class: ${authenticationToken.javaClass}")
+      println("AuthenticationToken class name: ${authenticationToken.javaClass.name}")
+      // Attempt mapping to assert references are correct
+        map1.map { mapper.mapReport(it, userToken = authenticationToken) }
     } catch (e: Exception) {
       try {
         definition.id.let {
