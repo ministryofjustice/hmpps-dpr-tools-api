@@ -37,7 +37,7 @@ class DefinitionService(
       println("AuthenticationToken class: ${authenticationToken.javaClass}")
       println("AuthenticationToken class name: ${authenticationToken.javaClass.name}")
       // Attempt mapping to assert references are correct
-        map1.map { mapper.mapReport(it, userToken = authenticationToken) }
+      map1.map { mapper.mapReport(it, userToken = authenticationToken) }
     } catch (e: Exception) {
       try {
         definition.id.let {
