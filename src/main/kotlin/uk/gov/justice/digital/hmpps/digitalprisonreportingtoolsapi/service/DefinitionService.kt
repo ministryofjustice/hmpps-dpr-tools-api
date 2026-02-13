@@ -25,19 +25,17 @@ class DefinitionService(
 
   suspend fun saveAndValidate(
     definition: ProductDefinition,
-    authenticationToken: DprAuthAwareAuthenticationToken,
+    authenticationToken: DprAuthAwareAuthenticationToken?,
     originalBody: String,
   ) {
     try {
       definition.id.let {
         repository.save(definition, originalBody)
       }
-      val map1 = definition.report
+      definition.report
         .map { report -> repository.getSingleReportProductDefinition(definitionId = definition.id, report.id) }
-      println("AuthenticationToken class: ${authenticationToken.javaClass}")
-      println("AuthenticationToken class name: ${authenticationToken.javaClass.name}")
-      // Attempt mapping to assert references are correct
-      map1.map { mapper.mapReport(it, userToken = authenticationToken) }
+        // Attempt mapping to assert references are correct
+        .map { mapper.mapReport(it, userToken = authenticationToken) }
     } catch (e: Exception) {
       try {
         definition.id.let {
