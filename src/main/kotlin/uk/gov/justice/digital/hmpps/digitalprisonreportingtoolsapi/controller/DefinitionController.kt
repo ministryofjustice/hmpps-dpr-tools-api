@@ -32,7 +32,8 @@ class DefinitionController(
     authentication: DprAuthAwareAuthenticationToken,
   ) {
     val definition = dprDefinitionGson.fromJson(body, ProductDefinition::class.java)
-
+    println("Controller token class: ${authentication.javaClass}")
+    println("Controller token class name: ${authentication.javaClass.name}")
     definitionService.saveAndValidate(definition, authentication, body)
   }
 
