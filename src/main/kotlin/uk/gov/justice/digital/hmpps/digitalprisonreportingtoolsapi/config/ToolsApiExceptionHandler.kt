@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.DefinitionNotFoundException
-import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.InvalidDefinitionException
 
 @RestControllerAdvice
 class ToolsApiExceptionHandler {
@@ -18,9 +17,9 @@ class ToolsApiExceptionHandler {
   @ResponseStatus(BAD_REQUEST)
   fun handleValidationException(e: Exception): ResponseEntity<ErrorResponse> = respondWithBadRequest(e)
 
-  @ExceptionHandler(InvalidDefinitionException::class)
-  @ResponseStatus(BAD_REQUEST)
-  fun handleInvalidDefinitionException(e: Exception): ResponseEntity<ErrorResponse> = respondWithBadRequest(e)
+//  @ExceptionHandler(InvalidDefinitionException::class)
+//  @ResponseStatus(BAD_REQUEST)
+//  fun handleInvalidDefinitionException(e: Exception): ResponseEntity<ErrorResponse> = respondWithBadRequest(e)
 
   @ExceptionHandler(DefinitionNotFoundException::class)
   @ResponseStatus(NOT_FOUND)
