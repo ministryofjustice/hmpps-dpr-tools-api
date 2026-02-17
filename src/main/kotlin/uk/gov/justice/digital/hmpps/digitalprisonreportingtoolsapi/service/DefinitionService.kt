@@ -26,13 +26,13 @@ class DefinitionService(
       productDefinitionRepository = repository,
       configuredApiRepository = dataRepository,
       productDefinitionTokenPolicyChecker = productDefinitionTokenPolicyChecker,
-      identifiedHelper = identifiedHelper
+      identifiedHelper = identifiedHelper,
     ),
     identifiedHelper = identifiedHelper,
     establishmentCodesToWingsCacheService = establishmentCodesToWingsCacheService,
     alertCategoryCacheService = alertCategoryCacheService,
     productDefinitionTokenPolicyChecker = productDefinitionTokenPolicyChecker,
-    productDefinitionRepository = repository
+    productDefinitionRepository = repository,
   )
 
   suspend fun saveAndValidate(
