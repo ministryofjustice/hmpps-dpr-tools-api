@@ -21,7 +21,19 @@ class DefinitionService(
   alertCategoryCacheService: AlertCategoryCacheService,
   productDefinitionTokenPolicyChecker: ProductDefinitionTokenPolicyChecker,
 ) {
-  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(FakeConfiguredApiService(repository, dataRepository, productDefinitionTokenPolicyChecker, identifiedHelper), identifiedHelper, establishmentCodesToWingsCacheService, alertCategoryCacheService)
+  val mapper: ReportDefinitionMapper = ReportDefinitionMapper(
+    syncDataApiService = FakeConfiguredApiService(
+      productDefinitionRepository = repository,
+      configuredApiRepository = dataRepository,
+      productDefinitionTokenPolicyChecker = productDefinitionTokenPolicyChecker,
+      identifiedHelper = identifiedHelper
+    ),
+    identifiedHelper = identifiedHelper,
+    establishmentCodesToWingsCacheService = establishmentCodesToWingsCacheService,
+    alertCategoryCacheService = alertCategoryCacheService,
+    productDefinitionTokenPolicyChecker = productDefinitionTokenPolicyChecker,
+    productDefinitionRepository = repository
+  )
 
   suspend fun saveAndValidate(
     definition: ProductDefinition,
