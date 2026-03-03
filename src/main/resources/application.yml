@@ -79,6 +79,8 @@ dpr:
   lib:
     caseloads:
       host: ${ME_CASELOADS_API_HOST}
+    manage-users:
+      host: ${ME_CASELOADS_API_HOST}
     user:
       role: ${AUTHORISED_ROLES}
     system:
