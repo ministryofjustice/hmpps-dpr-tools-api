@@ -32,6 +32,9 @@ dpr:
       host: http://localhost:9999
     user:
       role: ROLE_PRISONS_REPORTING_TOOLS_USER
+    system:
+      token:
+        enabled: false
     redshiftdataapi:
       secretarn: REDSHIFT_DATA_SECRETARN
       clusterid: REDSHIFT_DATA_CLUSTER_ID
