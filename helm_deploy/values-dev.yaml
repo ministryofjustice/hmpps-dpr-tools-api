@@ -15,6 +15,7 @@ generic-service:
     REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-development
     REDSHIFT_DATA_S3_LOCATION: dpr-working-development/reports
     DPR_LIB_AWS_ACCOUNTID: "771283872747"
+    SYSTEM_TOKEN_ENABLED: true
 
   allowlist:
     groups:
