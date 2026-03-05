@@ -18,6 +18,16 @@ spring:
       ddl-auto: create-drop
   security:
     oauth2:
+      client:
+        registration:
+          default:
+            provider: hmpps-auth
+            authorization-grant-type: client_credentials
+            client-id: API_CLIENT_CREDENTIALS_ID
+            client-secret: API_CLIENT_CREDENTIALS_SECRET
+        provider:
+          hmpps-auth:
+            token-uri: test
       resourceserver:
         jwt:
           jwk-set-uri: test
