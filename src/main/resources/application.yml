@@ -35,6 +35,16 @@ spring:
 
   security:
     oauth2:
+      client:
+        registration:
+          default:
+            provider: hmpps-auth
+            authorization-grant-type: client_credentials
+            client-id: ${API_CLIENT_CREDENTIALS_ID}
+            client-secret: ${API_CLIENT_CREDENTIALS_SECRET}
+        provider:
+          hmpps-auth:
+            token-uri: ${hmpps.auth.url}/auth/oauth/token
       resourceserver:
         jwt:
           jwk-set-uri: ${hmpps.auth.url}/.well-known/jwks.json
