@@ -79,8 +79,14 @@ dpr:
   lib:
     caseloads:
       host: ${ME_CASELOADS_API_HOST}
+    manage-users:
+      host: ${ME_CASELOADS_API_HOST}
     user:
       role: ${AUTHORISED_ROLES}
+    system:
+      role: ${AUTHORISED_ROLES}
+      token:
+        enabled: ${SYSTEM_TOKEN_ENABLED}
     definition:
       locations: unused.json
       repository: memory
