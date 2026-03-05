@@ -6,7 +6,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
 import java.security.KeyPair
 import java.security.KeyPairGenerator
-
 import java.time.Duration
 import java.util.Date
 import java.util.UUID
