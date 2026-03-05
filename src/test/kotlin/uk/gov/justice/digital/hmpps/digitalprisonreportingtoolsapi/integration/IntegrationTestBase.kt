@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = ["spring.main.allow-bean-definition-overriding=true"])
 @ActiveProfiles("test")
 @Import(TestWebClientConfiguration::class)
 abstract class IntegrationTestBase {
