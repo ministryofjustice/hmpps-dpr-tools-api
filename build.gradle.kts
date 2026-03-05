@@ -15,11 +15,12 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("com.amazon.redshift:redshift-jdbc4-no-awssdk:1.2.45.1069")
   implementation("org.postgresql:postgresql:42.7.5")
-  implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:10.0.2")
+  implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:10.0.4")
   implementation("com.google.code.gson:gson:2.11.0")
   implementation("software.amazon.awssdk:redshiftdata:2.31.24")
   implementation("software.amazon.awssdk:athena:2.31.65")
   implementation("software.amazon.awssdk:sts:2.31.65")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.8.2")
 
   // Security
   implementation("org.springframework.boot:spring-boot-starter-security")
@@ -33,6 +34,7 @@ dependencies {
   testImplementation("com.h2database:h2")
   testImplementation("io.jsonwebtoken:jjwt:0.12.6")
   testImplementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.8.2")
 }
 
 java {

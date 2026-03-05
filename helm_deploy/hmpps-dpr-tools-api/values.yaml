@@ -22,6 +22,7 @@ generic-service:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
     REDSHIFT_DATA_DB: datamart
     CUSTOMDATASOURCE_ACTIVITIES_ENABLED: false
+    SYSTEM_TOKEN_ENABLED: false
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
