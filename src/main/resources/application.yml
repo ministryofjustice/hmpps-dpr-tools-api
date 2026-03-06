@@ -37,7 +37,7 @@ spring:
     oauth2:
       client:
         registration:
-          default:
+          DPR_LIB_API:
             provider: hmpps-auth
             authorization-grant-type: client_credentials
             client-id: ${API_CLIENT_CREDENTIALS_ID}
