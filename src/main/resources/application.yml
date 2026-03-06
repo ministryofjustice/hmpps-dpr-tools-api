@@ -44,7 +44,7 @@ spring:
             client-secret: ${API_CLIENT_CREDENTIALS_SECRET}
         provider:
           hmpps-auth:
-            token-uri: ${hmpps.auth.url}/auth/oauth/token
+            token-uri: ${hmpps.auth.url}/oauth/token
       resourceserver:
         jwt:
           jwk-set-uri: ${hmpps.auth.url}/.well-known/jwks.json
