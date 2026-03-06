@@ -15,6 +15,7 @@ generic-service:
     REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-test
     REDSHIFT_DATA_S3_LOCATION: dpr-working-test/reports
     DPR_LIB_AWS_ACCOUNTID: "203591025782"
+    SYSTEM_TOKEN_ENABLED: true
 
   allowlist:
     groups:
