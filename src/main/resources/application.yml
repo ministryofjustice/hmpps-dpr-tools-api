@@ -4,19 +4,40 @@ info.app:
 
 customdatasource:
   activities:
-    url: ${ACTIVITIES_JDBC_URL}
-    username: ${ACTIVITIES_JDBC_USER}
-    password: ${ACTIVITIES_JDBC_PASSWORD}
-    driver: org.postgresql.Driver
+    url: jdbc:h2:mem:datamart;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS domain\;
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+    driver: org.h2.Driver
+#  redshift:
+#    url: jdbc:h2:mem:datamart;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS domain\;
+#    username: sa
+#    password: sa
+#    driver-class-name: org.h2.Driver
+#    driver: org.h2.Driver
+#  activities:
+#    url: ${ACTIVITIES_JDBC_URL}
+#    username: ${ACTIVITIES_JDBC_USER}
+#    password: ${ACTIVITIES_JDBC_PASSWORD}
+#    driver: org.postgresql.Driver
   redshift:
-    url: ${REDSHIFT_JDBC_URL}
-    username: ${REDSHIFT_JDBC_USER}
-    password: ${REDSHIFT_JDBC_PASSWORD}
+    url: jdbc:redshift://localhost:5439/datamart
+    username: dpruser
+    password: LBu6werq48lUw_Ke
+    driver: com.amazon.redshift.jdbc.Driver
+  datamart:
+    url: jdbc:redshift://localhost:5439/datamart
+    username: dpruser
+    password: LBu6werq48lUw_Ke
     driver: com.amazon.redshift.jdbc.Driver
 
 spring:
   flyway:
     enabled: false
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+    ddl-auto: create-drop
   application:
     name: hmpps-dpr-tools-api
   codec:
@@ -44,13 +65,13 @@ spring:
             client-secret: ${API_CLIENT_CREDENTIALS_SECRET}
         provider:
           hmpps-auth:
-            token-uri: ${hmpps.auth.url}/auth/oauth/token
+            token-uri: ${hmpps.auth.url}/oauth/token
       resourceserver:
         jwt:
           jwk-set-uri: ${hmpps.auth.url}/.well-known/jwks.json
 
 server:
-  port: 8080
+  port: 8081
   servlet:
     context-path: /
   forward-headers-strategy: native
@@ -101,11 +122,11 @@ dpr:
       locations: unused.json
       repository: memory
     redshiftdataapi:
-      secretarn: ${REDSHIFT_DATA_SECRETARN}
-      clusterid: ${REDSHIFT_DATA_CLUSTER_ID}
-      database: ${REDSHIFT_DATA_DB}
+      secretarn: arn:aws:secretsmanager:eu-west-2:771283872747:secret:dpr-redshift-secret-development-rLHcQZ
+      clusterid: dpr-redshift-development
+      database: datamart
       tokenrefreshdurationsec: 3600
-      s3location: ${REDSHIFT_DATA_S3_LOCATION}
+      s3location: dpr-working-development/reports
       athenaworkgroup: dpr-generic-athena-workgroup
     aws:
       sts:
@@ -114,3 +135,9 @@ dpr:
 logging:
   level:
     uk.gov.justice.digital.hmpps.digitalprisonreportinglib: debug
+    org.springframework.security.oauth2: debug
+    org.springframework.security: debug
+    com.nimbusds.jose.jwk: debug
+    org.springframework.jdbc: debug
+
+
