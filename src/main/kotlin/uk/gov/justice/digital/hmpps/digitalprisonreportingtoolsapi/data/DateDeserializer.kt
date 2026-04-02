@@ -8,7 +8,7 @@ import java.sql.Date
 import java.text.SimpleDateFormat
 
 class DateDeserializer : StdDeserializer<Date>(Date::class.java) {
-  private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+  private val formatter = SimpleDateFormat("yyyy-MM-dd")
 
   companion object {
     private val log = LoggerFactory.getLogger(this::class.java)
