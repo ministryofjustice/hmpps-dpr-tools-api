@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data
+package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data
 
 import com.google.gson.JsonParseException
 import org.slf4j.LoggerFactory

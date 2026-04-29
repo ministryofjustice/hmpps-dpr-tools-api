@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data
+package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data
 
 import tools.jackson.core.JsonGenerator
 import tools.jackson.databind.SerializationContext
