@@ -2,14 +2,12 @@ package uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data
 
 import com.google.gson.JsonParseException
 import org.slf4j.LoggerFactory
-import org.springframework.boot.jackson.JacksonComponent
 import tools.jackson.core.JsonParser
 import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.deser.std.StdDeserializer
 import java.text.SimpleDateFormat
 import java.util.Date
 
-@JacksonComponent
 class DateUtilDeserializer : StdDeserializer<Date>(Date::class.java) {
   private val formatter = SimpleDateFormat("yyyy-MM-dd")
 
