@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 class DateUtilDeserializer : StdDeserializer<Date>(Date::class.java) {
-  private val formatter = SimpleDateFormat("yyyy-MM-dd")
+  private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
   companion object {
     private val log = LoggerFactory.getLogger(this::class.java)
