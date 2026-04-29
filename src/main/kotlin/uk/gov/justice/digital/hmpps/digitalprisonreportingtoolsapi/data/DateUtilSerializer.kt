@@ -10,7 +10,7 @@ import java.util.Date
 @JacksonComponent
 class DateUtilSerializer : StdSerializer<Date>(Date::class.java) {
 
-  private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+  private val formatter = SimpleDateFormat("yyyy-MM-dd")
 
   override fun serialize(value: Date, gen: JsonGenerator, ctxt: SerializationContext) {
     val formattedDate = formatter.format(value)
