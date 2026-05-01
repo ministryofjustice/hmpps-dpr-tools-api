@@ -47,7 +47,7 @@ class DefinitionService(
       definition.report
         .map { report -> repository.getSingleReportProductDefinition(definitionId = definition.id, report.id) }
         // Attempt mapping to assert references are correct
-        .map { mapper.mapReport(it, userToken = authenticationToken) }
+        .map { mapper.mapReport(it, authToken = authenticationToken) }
     } catch (e: Exception) {
       try {
         definition.id.let {
