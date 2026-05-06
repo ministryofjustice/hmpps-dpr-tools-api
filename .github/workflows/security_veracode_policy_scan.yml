@@ -3,8 +3,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "34 6 * * 1" # Every Monday
-  pull_request:
-    branches: ['**']
+
 jobs:
   create-artifact:
     name: Build the artifact for veracode to scan
