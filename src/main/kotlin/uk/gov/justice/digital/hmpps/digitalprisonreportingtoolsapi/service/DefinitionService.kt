@@ -1,10 +1,10 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service
 
 import org.springframework.stereotype.Service
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.context.ExecutionContext
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ProductDefinitionTokenPolicyChecker
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ReportDefinitionMapper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.alert.AlertCategoryCacheService
@@ -37,7 +37,7 @@ class DefinitionService(
 
   suspend fun saveAndValidate(
     definition: ProductDefinition,
-    authenticationToken: DprAuthAwareAuthenticationToken?,
+    executionContext: ExecutionContext,
     originalBody: String,
   ) {
     try {
@@ -47,7 +47,7 @@ class DefinitionService(
       definition.report
         .map { report -> repository.getSingleReportProductDefinition(definitionId = definition.id, report.id) }
         // Attempt mapping to assert references are correct
-        .map { mapper.mapReport(it, authToken = authenticationToken) }
+        .map { mapper.mapReport(it, executionContext) }
     } catch (e: Exception) {
       try {
         definition.id.let {

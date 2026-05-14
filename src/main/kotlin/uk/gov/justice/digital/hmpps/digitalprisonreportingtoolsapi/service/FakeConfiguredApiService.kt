@@ -1,10 +1,10 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service
 
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.context.ExecutionContext
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ProductDefinitionRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.Dataset
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ProductDefinitionTokenPolicyChecker
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.SyncDataApiService
 
@@ -15,7 +15,7 @@ class FakeConfiguredApiService(
   identifiedHelper: IdentifiedHelper,
 ) : SyncDataApiService(productDefinitionRepository, configuredApiRepository, productDefinitionTokenPolicyChecker, identifiedHelper) {
 
-  override fun validateAndFetchData(
+  fun validateAndFetchData(
     reportId: String,
     reportVariantId: String,
     filters: Map<String, String>,
@@ -23,7 +23,7 @@ class FakeConfiguredApiService(
     pageSize: Long,
     sortColumn: String?,
     sortedAsc: Boolean?,
-    userToken: DprAuthAwareAuthenticationToken?,
+    executionContext: ExecutionContext,
     reportFieldId: Set<String>?,
     prefix: String?,
     dataProductDefinitionsPath: String?,

@@ -4,15 +4,16 @@ import com.google.gson.Gson
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.security.core.Authentication
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.config.getUserContext
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprAuthAwareAuthenticationToken
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.ManageUsersClient
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.DefinitionService
 
 @RestController
@@ -20,6 +21,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.Defin
 class DefinitionController(
   val definitionService: DefinitionService,
   val dprDefinitionGson: Gson,
+  val manageUsersClient: ManageUsersClient,
 ) {
   @Operation(
     description = "Saves a definition",
@@ -30,10 +32,10 @@ class DefinitionController(
     @RequestBody
     body: String,
     @PathVariable definitionId: String,
-    authentication: Authentication,
+    httpRequest: HttpServletRequest,
   ) {
     val definition = dprDefinitionGson.fromJson(body, ProductDefinition::class.java)
-    definitionService.saveAndValidate(definition, authentication as DprAuthAwareAuthenticationToken?, body)
+    definitionService.saveAndValidate(definition, httpRequest.getUserContext(manageUsersClient), body)
   }
 
   @Operation(
