@@ -30,7 +30,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       "datasource": [
         {
           "id": "10",
-          "name": "11"
+          "name": "activities"
         }
       ],
       "dataset": [
