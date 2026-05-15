@@ -14,8 +14,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.hmpps.kotlin.auth.AuthSource
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
@@ -86,14 +84,14 @@ abstract class IntegrationTestBase {
                  "user_name": "request-user",
                  "auth_source": "none"
                }
-              """.trimIndent()
+              """.trimIndent(),
             ),
         ),
     )
   }
 
   protected fun stubPrisonerCaseloadResponse() {
-   wireMockServer.stubFor(
+    wireMockServer.stubFor(
       WireMock.get("/prisonusers/request-user/caseloads")
         .willReturn(
           WireMock.aResponse()
@@ -110,7 +108,7 @@ abstract class IntegrationTestBase {
                   {"id":"LWSTMC","name":"Lowestoft (North East Suffolk) Magistrat"}
                 ]
               }
-              """.trimIndent()
+              """.trimIndent(),
             ),
         ),
     )
@@ -133,7 +131,7 @@ abstract class IntegrationTestBase {
                 "userId":"abc123",
                 "uuid":"989q-2f3f-2g3-g34"
               }
-              """.trimIndent()
+              """.trimIndent(),
             ),
         ),
     )
@@ -151,7 +149,7 @@ abstract class IntegrationTestBase {
                [
                 {"roleCode":"$authorisedRole"}
                ]
-              """.trimIndent()
+              """.trimIndent(),
             ),
         ),
     )

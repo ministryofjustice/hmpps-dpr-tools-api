@@ -32,5 +32,4 @@ class FakeConfiguredApiService(
     val x: List<Map<String, Any?>> = emptyList()
     return x
   }
-
 }
