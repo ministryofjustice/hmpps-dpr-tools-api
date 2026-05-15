@@ -15,18 +15,22 @@ class FakeConfiguredApiService(
   identifiedHelper: IdentifiedHelper,
 ) : SyncDataApiService(productDefinitionRepository, configuredApiRepository, productDefinitionTokenPolicyChecker, identifiedHelper) {
 
-  fun validateAndFetchData(
+  override fun validateAndFetchData(
     reportId: String,
     reportVariantId: String,
     filters: Map<String, String>,
     selectedPage: Long,
     pageSize: Long,
+    executionContext: ExecutionContext,
     sortColumn: String?,
     sortedAsc: Boolean?,
-    executionContext: ExecutionContext,
     reportFieldId: Set<String>?,
     prefix: String?,
     dataProductDefinitionsPath: String?,
     datasetForFilter: Dataset?,
-  ): List<Map<String, Any?>> = emptyList()
+  ): List<Map<String, Any?>> {
+    val x: List<Map<String, Any?>> = emptyList()
+    return x
+  }
+
 }

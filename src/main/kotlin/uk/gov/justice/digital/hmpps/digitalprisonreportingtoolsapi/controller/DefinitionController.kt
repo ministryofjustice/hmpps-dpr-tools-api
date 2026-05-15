@@ -35,7 +35,7 @@ class DefinitionController(
     httpRequest: HttpServletRequest,
   ) {
     val definition = dprDefinitionGson.fromJson(body, ProductDefinition::class.java)
-    definitionService.saveAndValidate(definition, httpRequest.getUserContext(manageUsersClient), body)
+    return definitionService.saveAndValidate(definition, httpRequest.getUserContext(manageUsersClient), body)
   }
 
   @Operation(

@@ -36,6 +36,7 @@ dependencies {
   testImplementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.0.2")
   testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
+  testImplementation("com.marcinziolo:kotlin-wiremock:2.1.1")
 }
 
 java {

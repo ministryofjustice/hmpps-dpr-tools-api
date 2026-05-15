@@ -7,6 +7,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHel
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ProductDefinitionTokenPolicyChecker
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ReportDefinitionMapper
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.SyncDataApiService
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.alert.AlertCategoryCacheService
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.estcodesandwings.EstablishmentCodesToWingsCacheService
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.data.CrudProductDefinitionRepository
@@ -22,7 +23,7 @@ class DefinitionService(
   productDefinitionTokenPolicyChecker: ProductDefinitionTokenPolicyChecker,
 ) {
   val mapper: ReportDefinitionMapper = ReportDefinitionMapper(
-    syncDataApiService = FakeConfiguredApiService(
+    syncDataApiService = SyncDataApiService(
       productDefinitionRepository = repository,
       configuredApiRepository = dataRepository,
       productDefinitionTokenPolicyChecker = productDefinitionTokenPolicyChecker,
