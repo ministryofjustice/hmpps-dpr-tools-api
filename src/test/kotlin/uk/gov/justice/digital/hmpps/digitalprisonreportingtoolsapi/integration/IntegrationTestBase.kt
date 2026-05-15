@@ -127,7 +127,7 @@ abstract class IntegrationTestBase {
                 "username":"request-user",
                 "active":true,
                 "name":"request-user",
-                "authSource":"${AuthSource.NONE.name}",
+                "authSource":"${AuthSource.NOMIS.name}",
                 "userId":"abc123",
                 "uuid":"989q-2f3f-2g3-g34"
               }
