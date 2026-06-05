@@ -15,12 +15,12 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("com.amazon.redshift:redshift-jdbc4-no-awssdk:1.2.45.1069")
   implementation("org.postgresql:postgresql:42.7.5")
-  implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:15.1.0")
+  implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:16.2.1")
   implementation("com.google.code.gson:gson:2.11.0")
   implementation("software.amazon.awssdk:redshiftdata:2.31.24")
   implementation("software.amazon.awssdk:athena:2.31.65")
   implementation("software.amazon.awssdk:sts:2.31.65")
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:2.0.2")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:2.3.0")
 
   // Security
   implementation("org.springframework.boot:spring-boot-starter-security")
@@ -32,10 +32,11 @@ dependencies {
 
   // Testing
   testImplementation("com.h2database:h2")
-  testImplementation("io.jsonwebtoken:jjwt:0.12.6")
+  testImplementation("io.jsonwebtoken:jjwt:0.13.0")
   testImplementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
-  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.0.2")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.3.0")
   testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
+  testImplementation("com.marcinziolo:kotlin-wiremock:2.1.1")
 }
 
 java {
