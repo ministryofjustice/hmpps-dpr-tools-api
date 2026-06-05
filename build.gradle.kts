@@ -20,7 +20,7 @@ dependencies {
   implementation("software.amazon.awssdk:redshiftdata:2.31.24")
   implementation("software.amazon.awssdk:athena:2.31.65")
   implementation("software.amazon.awssdk:sts:2.31.65")
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:2.0.2")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:2.3.0")
 
   // Security
   implementation("org.springframework.boot:spring-boot-starter-security")
@@ -34,7 +34,7 @@ dependencies {
   testImplementation("com.h2database:h2")
   testImplementation("io.jsonwebtoken:jjwt:0.13.0")
   testImplementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
-  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.0.2")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.3.0")
   testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
   testImplementation("com.marcinziolo:kotlin-wiremock:2.1.1")
 }
