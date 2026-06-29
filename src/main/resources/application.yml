@@ -84,6 +84,7 @@ springdoc:
 
 dpr:
   lib:
+    hasProbationDatasources: ${HAS_PROBATION_DATASOURCES:false}
     caseloads:
       host: ${ME_CASELOADS_API_HOST}
     manage-users:
