@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -22,6 +23,9 @@ class DefinitionController(
   val definitionService: DefinitionService,
   val dprDefinitionGson: Gson,
   val manageUsersClient: ManageUsersClient,
+  @Value("\${dpr.lib.hasProbationDatasources}")
+  val hasProbationDatasources: Boolean,
+
 ) {
   @Operation(
     description = "Saves a definition",
@@ -35,7 +39,7 @@ class DefinitionController(
     httpRequest: HttpServletRequest,
   ) {
     val definition = dprDefinitionGson.fromJson(body, ProductDefinition::class.java)
-    return definitionService.saveAndValidate(definition, httpRequest.getUserContext(manageUsersClient), body)
+    return definitionService.saveAndValidate(definition, httpRequest.getUserContext(manageUsersClient, hasProbationDatasources), body)
   }
 
   @Operation(
