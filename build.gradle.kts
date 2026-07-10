@@ -1,7 +1,7 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "10.0.5"
-  kotlin("jvm") version "2.3.0"
-  kotlin("plugin.spring") version "2.3.0"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "11.0.0-beta2"
+  kotlin("jvm") version "2.4.0"
+  kotlin("plugin.spring") version "2.4.0"
   id("jacoco")
   id("org.barfuin.gradle.jacocolog") version "3.1.0"
 }
@@ -20,7 +20,7 @@ dependencies {
   implementation("software.amazon.awssdk:redshiftdata:2.31.24")
   implementation("software.amazon.awssdk:athena:2.31.65")
   implementation("software.amazon.awssdk:sts:2.31.65")
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:2.3.0")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:3.0.0-beta")
 
   // Security
   implementation("org.springframework.boot:spring-boot-starter-security")
