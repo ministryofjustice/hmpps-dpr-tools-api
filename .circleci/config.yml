@@ -122,7 +122,7 @@ workflows:
             branches:
               only:
                 - main
-                - probation-tools
+                - tools-probation
           requires:
             - helm_lint
             - validate
@@ -138,7 +138,7 @@ workflows:
             branches:
               only:
                 - main
-                - probation-tools
+                - tools-probation
           requires:
             - validate
             - build_docker
