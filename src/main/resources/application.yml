@@ -90,7 +90,7 @@ dpr:
     manage-users:
       host: ${ME_CASELOADS_API_HOST}
     user:
-      role: ${AUTHORISED_ROLES}
+      role: ${AUTHORISED_USER_ROLES}
     system:
       role: ${AUTHORISED_ROLES}
       token:
