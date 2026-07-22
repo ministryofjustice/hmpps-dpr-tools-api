@@ -23,6 +23,7 @@ generic-service:
     REDSHIFT_DATA_DB: datamart
     CUSTOMDATASOURCE_ACTIVITIES_ENABLED: false
     SYSTEM_TOKEN_ENABLED: false
+    AUTHORISED_ROLES: ROLE_REPORTING__PRISONS__RO
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:

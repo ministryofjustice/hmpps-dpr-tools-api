@@ -10,7 +10,6 @@ generic-service:
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.dev.json
     HMPPS_AUTH_URL: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth
-    AUTHORISED_ROLES: ROLE_PRISONS_REPORTING_TOOLS_USER
     ME_CASELOADS_API_HOST: https://manage-users-api-preprod.hmpps.service.justice.gov.uk
     URL_ENV_SUFFIX: preprod
     REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-preproduction
