@@ -1,19 +1,19 @@
 # Per environment values which override defaults in hmpps-dpr-tools-api/values.yaml
 
 generic-service:
-  serviceAccountName: "dpr-tools-development-cross-iam"
+  serviceAccountName: "dpr-tools-test-cross-iam"
 
   ingress:
-    host: dpr-tools-api-dev.hmpps.service.justice.gov.uk
+    host: dpr-tools-api-test.probation.service.justice.gov.uk
 
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.dev.json
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     ME_CASELOADS_API_HOST: https://manage-users-api-dev.hmpps.service.justice.gov.uk
-    URL_ENV_SUFFIX: dev
-    REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-development
-    REDSHIFT_DATA_S3_LOCATION: dpr-working-development/reports
-    DPR_LIB_AWS_ACCOUNTID: "771283872747"
+    URL_ENV_SUFFIX: test
+    REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-test
+    REDSHIFT_DATA_S3_LOCATION: dpr-working-test/reports
+    DPR_LIB_AWS_ACCOUNTID: "203591025782"
 
   scheduledDowntime:
     enabled: true
@@ -29,4 +29,4 @@ generic-service:
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts
 generic-prometheus-alerts:
   businessHoursOnly: true
-  alertSeverity: digital-prison-reporting-dev
+  alertSeverity: probation-frontend-alerts-test

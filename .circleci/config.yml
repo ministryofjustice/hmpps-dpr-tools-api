@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@10
+  hmpps: ministryofjustice/hmpps@11
   slack: circleci/slack@4.12.1
   mem: circleci/rememborb@0.0.2
 
@@ -25,6 +25,7 @@ jobs:
       name: hmpps/java
       tag: "21.0"
     steps:
+      - setup_remote_docker
       - checkout
       - restore_cache:
           keys:
@@ -43,7 +44,8 @@ jobs:
       - persist_to_workspace:
           root: << pipeline.parameters.workingdir >>
           paths:
-            - .
+            - .     
+
   build_multiplatform_docker_job:
     docker:
       - image: cimg/base:stable
@@ -52,9 +54,9 @@ jobs:
       image_name:
         type: string
         default: "quay.io/hmpps/${CIRCLE_PROJECT_REPONAME}"
-    steps:
+    steps:   
       - attach_workspace:
-          at: .
+          at: .    
       - setup_remote_docker:
           docker_layer_caching: true
       - mem/remember:
@@ -77,7 +79,7 @@ jobs:
             docker buildx create --use multi-arch-build --platform linux/arm64,linux/amd64
       - run:
           name: quay.io login
-          command: docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+          command: docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io            
       - run:
           name: Build container image
           command: |
@@ -96,7 +98,8 @@ jobs:
               --label "build.number=${CIRCLE_BUILD_NUM}" \
               --label "build.url=${CIRCLE_BUILD_URL}" \
               --label "build.gitref=${CIRCLE_SHA1}" \
-              --push
+              --push 
+
   remember-app-version:
     executor:
       name: hmpps/java
@@ -116,6 +119,22 @@ workflows:
               ignore: /.*/
       - hmpps/helm_lint:
           name: helm_lint
+      - hmpps/helm_lint:
+          name: helm_lint_probation
+          chart_name: hmpps-dpr-tools-api-probation
+          env: probation-dev
+      - hmpps/helm_lint:
+          name: helm_lint_probation_test
+          chart_name: hmpps-dpr-tools-api-probation
+          env: probation-test
+      - hmpps/helm_lint:
+          name: helm_lint_probation_preprod
+          chart_name: hmpps-dpr-tools-api-probation
+          env: probation-preprod
+      - hmpps/helm_lint:
+          name: helm_lint_probation_prod
+          chart_name: hmpps-dpr-tools-api-probation
+          env: probation-prod
       - build_multiplatform_docker_job:
           name: build_docker
           filters:
@@ -125,6 +144,10 @@ workflows:
                 - tools-probation
           requires:
             - helm_lint
+            - helm_lint_probation
+            - helm_lint_probation_test
+            - helm_lint_probation_preprod
+            - helm_lint_probation_prod
             - validate
       - hmpps/deploy_env:
           name: deploy_dev
@@ -144,14 +167,40 @@ workflows:
             - build_docker
             - helm_lint
           helm_timeout: 5m
+      # Probation API deployment to dev (shares namespace with probation UI)
+      - hmpps/deploy_env:
+          name: deploy_probation_dev
+          env: "probation-dev"
+          chart_name: hmpps-dpr-tools-api-probation
+          release_name: hmpps-dpr-tools-api-probation
+          context:
+            - hmpps-common-vars
+            - hmpps-dpr-tools-ui-dev-probation
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - validate
+            - build_docker
+            - helm_lint_probation
+          helm_timeout: 5m
       - request-test-approval:
           type: approval
           requires:
             - deploy_dev
+      - request-probation-test-approval:
+          type: approval
+          requires:
+            - deploy_probation_dev
       - remember-app-version:
           name: remember-version-for-test
           requires:
             - request-test-approval
+      - remember-app-version:
+          name: remember-version-for-probation-test
+          requires:
+            - request-probation-test-approval
       - hmpps/deploy_env:
           name: deploy_test
           env: "test"
@@ -160,12 +209,20 @@ workflows:
           context:
             - hmpps-common-vars
             - hmpps-dpr-tools-api-test
-          filters:
-            branches:
-              only:
-                - main
           requires:
             - remember-version-for-test
+          helm_timeout: 5m
+      - hmpps/deploy_env:
+          name: deploy_probation_test
+          env: "probation-test"
+          chart_name: hmpps-dpr-tools-api-probation
+          release_name: hmpps-dpr-tools-api-probation
+          jira_update: true
+          context:
+            - hmpps-common-vars
+            - hmpps-dpr-tools-ui-test-probation
+          requires:
+            - remember-version-for-probation-test
           helm_timeout: 5m
       - request-preprod-approval:
           type: approval
@@ -186,6 +243,27 @@ workflows:
             - hmpps-dpr-tools-api-preprod
           requires:
             - remember-version-for-preprod
+          helm_timeout: 5m
+      - request-probation-preprod-approval:
+          type: approval
+          requires:
+            - deploy_probation_dev
+      - remember-app-version:
+          name: remember-version-for-probation-preprod
+          requires:
+            - request-probation-preprod-approval
+      - hmpps/deploy_env:
+          name: deploy_probation_preprod
+          env: "probation-preprod"
+          chart_name: hmpps-dpr-tools-api-probation
+          release_name: hmpps-dpr-tools-api-probation
+          jira_update: true
+          jira_env_type: staging
+          context:
+            - hmpps-common-vars
+            - hmpps-dpr-tools-ui-preprod-probation
+          requires:
+            - remember-version-for-probation-preprod
           helm_timeout: 5m
       - request-prod-approval:
           type: approval
@@ -209,41 +287,26 @@ workflows:
           requires:
             - remember-version-for-prod
           helm_timeout: 5m
-
-  security:
-    triggers:
-      - schedule:
-          cron: "00 5 * * 1-5"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - hmpps/gradle_owasp_dependency_check:
-          jdk_tag: "21.0"
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+      - request-probation-prod-approval:
+          type: approval
+          requires:
+            - deploy_probation_preprod
+      - remember-app-version:
+          name: remember-version-for-probation-prod
+          requires:
+            - request-probation-prod-approval
+      - hmpps/deploy_env:
+          name: deploy_probation_prod
+          env: "probation-prod"
+          chart_name: hmpps-dpr-tools-api-probation
+          release_name: hmpps-dpr-tools-api-probation
+          jira_update: true
+          jira_env_type: production
+          slack_notification: true
+          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
           context:
             - hmpps-common-vars
-      - hmpps/trivy_latest_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - hmpps-common-vars
-      - hmpps/veracode_pipeline_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - veracode-credentials
-            - hmpps-common-vars
-  security-weekly:
-    triggers:
-      - schedule:
-          cron: "00 5 * * 1"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - hmpps/veracode_policy_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - veracode-credentials
-            - hmpps-common-vars
+            - hmpps-dpr-tools-ui-prod-probation
+          requires:
+            - remember-version-for-probation-prod
+          helm_timeout: 5m

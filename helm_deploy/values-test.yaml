@@ -14,11 +14,10 @@ generic-service:
     REDSHIFT_DATA_CLUSTER_ID: dpr-redshift-test
     REDSHIFT_DATA_S3_LOCATION: dpr-working-test/reports
     DPR_LIB_AWS_ACCOUNTID: "203591025782"
-    SYSTEM_TOKEN_ENABLED: true
 
   scheduledDowntime:
     enabled: true
-    startup: '40 7 * * 1-5' # Start at 7.40am UTC Monday-Friday
+    startupOverride: '40 7 * * 1-5' # Start at 7.40am UTC Monday-Friday
     shutdown: '20 20 * * 1-5' # Stop at 8.20pm UTC Monday-Friday
 
   allowlist:
