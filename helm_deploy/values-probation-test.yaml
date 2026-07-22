@@ -4,7 +4,7 @@ generic-service:
   serviceAccountName: "dpr-tools-test-cross-iam"
 
   ingress:
-    host: dpr-tools-api-test.probation.service.justice.gov.uk
+    host: dpr-tools-api-test-probation.hmpps.service.justice.gov.uk
 
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.dev.json
