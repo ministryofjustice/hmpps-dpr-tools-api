@@ -89,6 +89,8 @@ dpr:
       host: ${ME_CASELOADS_API_HOST}
     manage-users:
       host: ${ME_CASELOADS_API_HOST}
+    user:
+      requiredAuthSources: ${REQUIRED_AUTH_SOURCES:}
     system:
       role: ${AUTHORISED_ROLES}
       token:

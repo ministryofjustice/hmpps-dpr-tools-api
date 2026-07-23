@@ -24,6 +24,7 @@ generic-service:
     CUSTOMDATASOURCE_ACTIVITIES_ENABLED: false
     SYSTEM_TOKEN_ENABLED: true
     AUTHORISED_ROLES: ROLE_REPORTING__PRISONS__RO
+    REQUIRED_AUTH_SOURCES: NOMIS
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
