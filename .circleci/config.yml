@@ -221,7 +221,7 @@ workflows:
           jira_update: true
           context:
             - hmpps-common-vars
-            - hmpps-dpr-tools-ui-test-probation
+            - hmpps-dpr-tools-ui-probation-test
           requires:
             - remember-version-for-probation-test
           helm_timeout: 5m
@@ -262,7 +262,7 @@ workflows:
           jira_env_type: staging
           context:
             - hmpps-common-vars
-            - hmpps-dpr-tools-ui-preprod-probation
+            - hmpps-dpr-tools-ui-probation-preprod
           requires:
             - remember-version-for-probation-preprod
           helm_timeout: 5m
@@ -307,7 +307,7 @@ workflows:
           slack_channel_name: << pipeline.parameters.releases-slack-channel >>
           context:
             - hmpps-common-vars
-            - hmpps-dpr-tools-ui-prod-probation
+            - hmpps-dpr-tools-ui-probation-prod
           requires:
             - remember-version-for-probation-prod
           helm_timeout: 5m
