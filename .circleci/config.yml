@@ -180,6 +180,7 @@ workflows:
             branches:
               only:
                 - main
+                - tools-probation
           requires:
             - validate
             - build_docker
