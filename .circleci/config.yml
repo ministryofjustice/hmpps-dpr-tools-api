@@ -141,7 +141,6 @@ workflows:
             branches:
               only:
                 - main
-                - tools-probation
           requires:
             - helm_lint
             - helm_lint_probation
@@ -161,7 +160,6 @@ workflows:
             branches:
               only:
                 - main
-                - tools-probation
           requires:
             - validate
             - build_docker
@@ -180,7 +178,6 @@ workflows:
             branches:
               only:
                 - main
-                - tools-probation
           requires:
             - validate
             - build_docker
