@@ -1,5 +1,5 @@
 generic-service:
-  nameOverride: hmpps-dpr-tools-api
+  nameOverride: hmpps-dpr-tools-api-probation
 
   replicaCount: 1
 
@@ -11,7 +11,7 @@ generic-service:
   ingress:
     enabled: true
     host: app-hostname.local # override per environment
-    tlsSecretName: hmpps-dpr-tools-cert
+    tlsSecretName: dpr-tools-cert
 
   # Environment variables to load into the deployment
   env:
@@ -23,8 +23,8 @@ generic-service:
     REDSHIFT_DATA_DB: datamart
     CUSTOMDATASOURCE_ACTIVITIES_ENABLED: false
     SYSTEM_TOKEN_ENABLED: true
-    AUTHORISED_ROLES: ROLE_REPORTING__PRISONS__RO
-    REQUIRED_AUTH_SOURCES: NOMIS
+    AUTHORISED_ROLES: ROLE_REPORTING__PROBATION__RO
+    REQUIRED_AUTH_SOURCES: DELIUS,AUTH
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -32,7 +32,7 @@ generic-service:
   #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
 
   namespace_secrets:
-    hmpps-dpr-tools-api:
+    hmpps-dpr-tools-ui:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
     redshift-jdbc:
       REDSHIFT_JDBC_USER: "user"
@@ -56,4 +56,4 @@ generic-service:
       - internal
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-dpr-tools-api
+  targetApplication: probation-frontend-alerts-prod
