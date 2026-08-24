@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.config.getUserContext
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.context.DataProductReportableInformation
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.ManageUsersClient
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.DefinitionService
@@ -39,7 +40,18 @@ class DefinitionController(
     httpRequest: HttpServletRequest,
   ) {
     val definition = dprDefinitionGson.fromJson(body, ProductDefinition::class.java)
-    return definitionService.saveAndValidate(definition, httpRequest.getUserContext(manageUsersClient, hasProbationDatasources), body)
+    return definitionService.saveAndValidate(
+      definition,
+      httpRequest.getUserContext(
+        manageUsersClient,
+        hasProbationDatasources,
+        DataProductReportableInformation(
+          id = "",
+          variantId = "",
+        ),
+      ),
+      body,
+    )
   }
 
   @Operation(
