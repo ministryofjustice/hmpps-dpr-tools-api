@@ -1,10 +1,10 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "11.0.2"
-  kotlin("jvm") version "2.4.0"
-  kotlin("plugin.spring") version "2.4.0"
-  kotlin("plugin.serialization") version "2.4.0"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "11.0.7"
+  kotlin("jvm") version "2.4.10"
+  kotlin("plugin.spring") version "2.4.10"
+  kotlin("plugin.serialization") version "2.4.10"
   id("jacoco")
-  id("org.barfuin.gradle.jacocolog") version "3.1.0"
+  id("org.barfuin.gradle.jacocolog") version "4.0.2"
 }
 
 configurations {
@@ -15,13 +15,13 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("com.amazon.redshift:redshift-jdbc4-no-awssdk:1.2.45.1069")
-  implementation("org.postgresql:postgresql:42.7.11")
+  implementation("org.postgresql:postgresql:42.7.13")
   implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:17.8.4")
   implementation("com.google.code.gson:gson:2.11.0")
   implementation("software.amazon.awssdk:redshiftdata:2.31.24")
   implementation("software.amazon.awssdk:athena:2.31.65")
   implementation("software.amazon.awssdk:sts:2.31.65")
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:3.0.0")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:3.0.1")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
   // Security
@@ -30,13 +30,13 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
   // Swagger
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.0")
 
   // Testing
   testImplementation("com.h2database:h2")
   testImplementation("io.jsonwebtoken:jjwt:0.13.0")
   testImplementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
-  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.3.0")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:3.0.1")
   testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
   testImplementation("com.marcinziolo:kotlin-wiremock:2.1.1")
 }
