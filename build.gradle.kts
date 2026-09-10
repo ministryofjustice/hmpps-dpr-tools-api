@@ -18,9 +18,9 @@ dependencies {
   implementation("org.postgresql:postgresql:42.7.13")
   implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:17.9.0")
   implementation("com.google.code.gson:gson:2.14.0")
-  implementation("software.amazon.awssdk:redshiftdata:2.54.12")
-  implementation("software.amazon.awssdk:athena:2.54.12")
-  implementation("software.amazon.awssdk:sts:2.54.12")
+  implementation("software.amazon.awssdk:redshiftdata:2.54.13")
+  implementation("software.amazon.awssdk:athena:2.54.13")
+  implementation("software.amazon.awssdk:sts:2.54.13")
   implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:3.0.1")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
@@ -30,7 +30,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
   // Swagger
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.0")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
 
   // Testing
   testImplementation("com.h2database:h2")
