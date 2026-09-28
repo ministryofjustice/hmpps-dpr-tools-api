@@ -42,7 +42,7 @@ class RedshiftProductDefinitionRepository(
   @Qualifier("redshift")
   lateinit var dataSource: DataSource
 
-  override fun getProductDefinitions(path: String?): List<ProductDefinitionSummary> {
+  override fun getProductDefinitions(): List<ProductDefinitionSummary> {
     log.debug("Fetching definitions from Redshift.")
     val stopwatch = StopWatch.createStarted()
     val jdbcTemplate = JdbcTemplate(dataSource)
@@ -56,7 +56,7 @@ class RedshiftProductDefinitionRepository(
     return definitions
   }
 
-  override fun getProductDefinition(definitionId: String, dataProductDefinitionsPath: String?): ProductDefinition {
+  override fun getProductDefinition(definitionId: String): ProductDefinition {
     try {
       val stopwatch = StopWatch.createStarted()
       val jdbcTemplate = JdbcTemplate(dataSource)
@@ -77,9 +77,9 @@ class RedshiftProductDefinitionRepository(
     }
   }
 
-  override fun getSingleReportProductDefinition(definitionId: String, reportId: String, dataProductDefinitionsPath: String?): SingleReportProductDefinition {
+  override fun getSingleReportProductDefinition(definitionId: String, reportId: String): SingleReportProductDefinition {
     try {
-      return super.getSingleReportProductDefinition(definitionId, reportId, null)
+      return super.getSingleReportProductDefinition(definitionId, reportId)
     } catch (e: ValidationException) {
       throw DefinitionNotFoundException(e.message)
     }
