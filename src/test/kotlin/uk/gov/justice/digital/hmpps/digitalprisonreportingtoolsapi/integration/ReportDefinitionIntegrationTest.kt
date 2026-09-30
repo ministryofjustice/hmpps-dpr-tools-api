@@ -62,7 +62,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
               {
                 "name": "${'$'}ref:F30",
                 "display": "51",
-                "wordWrap": "None",
+                "wordwrap": "None",
                 "filter": {
                   "type": "Radio",
                   "dynamicoptions": {
