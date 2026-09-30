@@ -1,0 +1,85 @@
+package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.config
+
+import io.opentelemetry.api.trace.Span
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.web.servlet.HandlerInterceptor
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.config.getUserContext
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.context.DataProductReportableInformation
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.context.ExecutionContext
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.DprSystemAuthAwareAuthenticationToken
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.ManageUsersClient
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ReportDefinitionService
+
+@Configuration
+class AppInsightsConfig(private val clientTrackingInterceptor: ClientTrackingInterceptor) : WebMvcConfigurer {
+  override fun addInterceptors(registry: InterceptorRegistry) {
+    log.info("Adding application insights client tracking interceptor")
+    registry.addInterceptor(clientTrackingInterceptor)
+      .addPathPatterns("/**")
+      .excludePathPatterns("/swagger-ui/**")
+      .excludePathPatterns("/health/**")
+  }
+  companion object {
+    private val log = LoggerFactory.getLogger(this::class.java)
+  }
+}
+
+@Configuration
+class ClientTrackingInterceptor(
+  val reportDefinitionService: ReportDefinitionService,
+  val manageUsersClient: ManageUsersClient,
+  @Value($$"${dpr.lib.hasProbationDatasources}")
+  val hasProbationDatasources: Boolean,
+) : HandlerInterceptor {
+
+  companion object {
+    private val log = LoggerFactory.getLogger(this::class.java)
+  }
+
+  override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
+    if (SecurityContextHolder.getContext().authentication is DprSystemAuthAwareAuthenticationToken) {
+      val regex = Regex("""/reports/([^/]+)/(?!metrics(/|$))([^/]+)""")
+      val resultMatched = regex.find(request.requestURI)
+      val productId = resultMatched?.let { resultMatched.groupValues[1] }
+      val reportVariantId = resultMatched?.let { resultMatched.groupValues[3] }
+      val executionContext = request.getUserContext(
+        manageUsersClient,
+        hasProbationDatasources,
+        DataProductReportableInformation(id = productId ?: "", variantId = reportVariantId ?: ""),
+      )
+      Span.current().setAttribute("uuid", executionContext.userInfo.uuid)
+      captureDpdAndPageDetails(request, executionContext, productId, reportVariantId)
+    }
+    return true
+  }
+
+  private fun captureDpdAndPageDetails(
+    request: HttpServletRequest,
+    executionContext: ExecutionContext,
+    productId: String?,
+    reportVariantId: String?,
+  ) {
+    try {
+      if (matchExists(productId, reportVariantId)) {
+        val pageNumber = request.parameterMap["selectedPage"]?.get(0)
+        val definition = reportDefinitionService.getDefinition(productId!!, reportVariantId!!, executionContext)
+        Span.current().setAttribute("product", definition.name) // product name in customDimensions
+        Span.current().setAttribute("reportName", definition.variant.name) // variant name in customDimensions
+        pageNumber?.let { Span.current().setAttribute("page", pageNumber) } // page number in customDimensions
+      }
+    } catch (e: Exception) {
+      log.error("Failed to log product name, variant name or selected page to App Insights: {}", e.message)
+    } finally {
+      executionContext.getActiveCaseLoadId()?.let { Span.current().setAttribute("activeCaseLoadId", it) }
+    }
+  }
+
+  private fun matchExists(productId: String?, reportVariantId: String?) = !productId.isNullOrBlank() && !reportVariantId.isNullOrBlank()
+}
