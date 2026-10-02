@@ -2,8 +2,6 @@ package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service
 
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.context.ExecutionContext
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AthenaApiRepository
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.service.ProductDefinitionTokenPolicyChecker
@@ -17,21 +15,14 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.exception.Inv
 @Service
 class DefinitionService(
   private val repository: CrudProductDefinitionRepository,
-  dataRepository: ConfiguredApiRepository,
   identifiedHelper: IdentifiedHelper,
-  athenaApiRepository: AthenaApiRepository,
   establishmentCodesToWingsCacheService: EstablishmentCodesToWingsCacheService,
+  syncDataApiService: SyncDataApiService,
   alertCategoryCacheService: AlertCategoryCacheService,
   productDefinitionTokenPolicyChecker: ProductDefinitionTokenPolicyChecker,
 ) {
   val mapper: ReportDefinitionMapper = ReportDefinitionMapper(
-    syncDataApiService = SyncDataApiService(
-      productDefinitionRepository = repository,
-      configuredApiRepository = dataRepository,
-      athenaApiRepository = athenaApiRepository,
-      productDefinitionTokenPolicyChecker = productDefinitionTokenPolicyChecker,
-      identifiedHelper = identifiedHelper,
-    ),
+    syncDataApiService = syncDataApiService,
     identifiedHelper = identifiedHelper,
     establishmentCodesToWingsCacheService = establishmentCodesToWingsCacheService,
     alertCategoryCacheService = alertCategoryCacheService,
