@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service
 
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.context.ExecutionContext
+import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.AthenaApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.ConfiguredApiRepository
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.IdentifiedHelper
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
@@ -18,6 +19,7 @@ class DefinitionService(
   private val repository: CrudProductDefinitionRepository,
   dataRepository: ConfiguredApiRepository,
   identifiedHelper: IdentifiedHelper,
+  athenaApiRepository: AthenaApiRepository,
   establishmentCodesToWingsCacheService: EstablishmentCodesToWingsCacheService,
   alertCategoryCacheService: AlertCategoryCacheService,
   productDefinitionTokenPolicyChecker: ProductDefinitionTokenPolicyChecker,
@@ -26,6 +28,7 @@ class DefinitionService(
     syncDataApiService = SyncDataApiService(
       productDefinitionRepository = repository,
       configuredApiRepository = dataRepository,
+      athenaApiRepository = athenaApiRepository,
       productDefinitionTokenPolicyChecker = productDefinitionTokenPolicyChecker,
       identifiedHelper = identifiedHelper,
     ),
