@@ -22,6 +22,8 @@ jobs:
     with:
       enable-probation: true
       deploy-dev-on-feature-branches: true
+      deploy-test-on-feature-branches: true
+      deploy-preprod-on-feature-branches: true
       slack-channel: 'dpr_cicd_approvals'
       # Workflow probation defaults are MI's (hmpps-probation-mi-api)
       probation-chart-name: hmpps-dpr-tools-api-probation
