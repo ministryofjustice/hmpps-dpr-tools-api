@@ -46,8 +46,6 @@ dpr:
       role: ROLE_PRISONS_REPORTING_TOOLS_USER
     system:
       role: ROLE_PRISONS_REPORTING_TOOLS_USER
-      token:
-        enabled: true
     redshiftdataapi:
       secretarn: REDSHIFT_DATA_SECRETARN
       clusterid: REDSHIFT_DATA_CLUSTER_ID
