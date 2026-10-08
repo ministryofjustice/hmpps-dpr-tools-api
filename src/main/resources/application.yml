@@ -93,8 +93,6 @@ dpr:
       requiredAuthSources: ${REQUIRED_AUTH_SOURCES:}
     system:
       role: ${AUTHORISED_ROLES}
-      token:
-        enabled: ${SYSTEM_TOKEN_ENABLED}
     definition:
       locations: unused.json
       repository: memory
