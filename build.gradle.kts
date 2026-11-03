@@ -16,12 +16,12 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("com.amazon.redshift:redshift-jdbc42:2.3.0")
   implementation("org.postgresql:postgresql:42.7.13")
-  implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:18.2.4")
+  implementation("uk.gov.justice.service.hmpps:hmpps-digital-prison-reporting-lib:18.4.1")
   implementation("com.google.code.gson:gson:2.14.0")
   implementation("software.amazon.awssdk:redshiftdata:2.54.12")
   implementation("software.amazon.awssdk:athena:2.54.12")
   implementation("software.amazon.awssdk:sts:2.54.12")
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:3.0.1")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:3.0.3")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
   // Security
