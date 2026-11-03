@@ -50,11 +50,13 @@ abstract class IntegrationTestBase {
     user: String = "request-user",
     roles: List<String> = listOf(),
     scopes: List<String> = listOf("read"),
+    authSource: AuthSource = AuthSource.NOMIS,
   ): (HttpHeaders) -> Unit = jwtAuthHelper.setAuthorisationHeader(
     clientId = "hmpps-digital-tools-api",
     user,
     scopes,
     roles,
+    authSource,
   )
 
   @BeforeEach
