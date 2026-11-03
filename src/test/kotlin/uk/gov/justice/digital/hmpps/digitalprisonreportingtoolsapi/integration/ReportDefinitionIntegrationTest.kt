@@ -75,8 +75,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 "visible": "true"
               }
             ]
-          },
-          "destination": []
+          }
         }
       ],
       "policy": [
