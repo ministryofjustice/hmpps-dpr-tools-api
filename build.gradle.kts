@@ -21,7 +21,7 @@ dependencies {
   implementation("software.amazon.awssdk:redshiftdata:2.54.12")
   implementation("software.amazon.awssdk:athena:2.54.12")
   implementation("software.amazon.awssdk:sts:2.54.12")
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:3.0.1")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:3.0.3")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
   // Security
