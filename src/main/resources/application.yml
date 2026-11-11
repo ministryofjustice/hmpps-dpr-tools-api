@@ -15,6 +15,8 @@ customdatasource:
     driver: com.amazon.redshift.jdbc.Driver
 
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   flyway:
     enabled: false
   application:
@@ -93,8 +95,6 @@ dpr:
       requiredAuthSources: ${REQUIRED_AUTH_SOURCES:}
     system:
       role: ${AUTHORISED_ROLES}
-      token:
-        enabled: ${SYSTEM_TOKEN_ENABLED}
     definition:
       locations: unused.json
       repository: memory

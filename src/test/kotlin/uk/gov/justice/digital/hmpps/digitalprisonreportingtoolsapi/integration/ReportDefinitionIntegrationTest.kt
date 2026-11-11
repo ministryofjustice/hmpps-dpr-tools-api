@@ -62,9 +62,9 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
               {
                 "name": "${'$'}ref:F30",
                 "display": "51",
-                "wordwrap": "None",
+                "wordwrap": "none",
                 "filter": {
-                  "type": "Radio",
+                  "type": "radio",
                   "dynamicoptions": {
                     "minimumLength": 2,
                     "returnAsStaticOptions": true
@@ -75,8 +75,7 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
                 "visible": "true"
               }
             ]
-          },
-          "destination": []
+          }
         }
       ],
       "policy": [

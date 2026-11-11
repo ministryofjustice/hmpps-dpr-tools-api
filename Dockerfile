@@ -1,27 +1,16 @@
 FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk-jammy AS builder
 
 ARG BUILD_NUMBER
-ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
+ENV BUILD_NUMBER=${BUILD_NUMBER:-1_0_0}
 
 WORKDIR /app
 ADD . .
 RUN ./gradlew --no-daemon assemble
 
-FROM eclipse-temurin:21-jre-jammy
-LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
+FROM ghcr.io/ministryofjustice/hmpps-eclipse-temurin:21-jre-jammy
 
 ARG BUILD_NUMBER
-ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
-
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    rm -rf /var/lib/apt/lists/*
-
-ENV TZ=Europe/London
-RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
-
-RUN addgroup --gid 2000 --system appgroup && \
-    adduser --uid 2000 --system appuser --gid 2000
+ENV BUILD_NUMBER=${BUILD_NUMBER:-1_0_0}
 
 WORKDIR /app
 COPY --from=builder --chown=appuser:appgroup /app/build/libs/hmpps-dpr-tools-api*.jar /app/app.jar
@@ -31,4 +20,4 @@ COPY --from=builder --chown=appuser:appgroup /app/applicationinsights.dev.json /
 
 USER 2000
 
-ENTRYPOINT ["java", "-XX:+AlwaysActAsServerClassMachine", "-javaagent:/app/agent.jar", "-jar", "/app/app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -XX:+AlwaysActAsServerClassMachine -XshowSettings:vm -javaagent:/app/agent.jar -jar /app/app.jar"]
