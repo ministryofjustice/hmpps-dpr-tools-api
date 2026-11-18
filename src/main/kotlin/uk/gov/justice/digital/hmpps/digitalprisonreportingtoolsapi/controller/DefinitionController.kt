@@ -1,12 +1,11 @@
 package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.controller
 
-import com.google.gson.Gson
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
-import kotlinx.serialization.json.Json
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -15,19 +14,18 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.config.getExecutionContext
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.context.DataProductReportableInformation
-import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.data.model.ProductDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.security.ManageUsersClient
+import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.serialization.SerialisationService
 import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.service.DefinitionService
 
 @RestController
 @Tag(name = "Report Definition API")
 class DefinitionController(
   val definitionService: DefinitionService,
-  val dprDefinitionGson: Gson,
   val manageUsersClient: ManageUsersClient,
-  @Value("\${dpr.lib.hasProbationDatasources}")
+  val serialisationService: SerialisationService,
+  @Value($$"${dpr.lib.hasProbationDatasources}")
   val hasProbationDatasources: Boolean,
-  val kotlinxJson: Json,
 ) {
   @Operation(
     description = "Saves a definition",
@@ -38,49 +36,25 @@ class DefinitionController(
     @RequestBody
     body: String,
     httpRequest: HttpServletRequest,
-  ) {
+  ): ResponseEntity<List<SerialisationService.DPDIssue>> {
     // Do proper validation, which will throw if wrong. Handled in the exception handler
-    val definition = kotlinxJson.decodeFromString<ProductDefinition>(body)
-    return definitionService.saveAndValidate(
-      definition,
-      httpRequest.getExecutionContext(
-        manageUsersClient,
-        hasProbationDatasources,
-        DataProductReportableInformation(
-          id = "",
-          variantId = "",
+    val (definition, issues) = serialisationService.deserializeProductDefinition(body)
+    if (definition != null) {
+      definitionService.saveAndValidate(
+        definition,
+        httpRequest.getExecutionContext(
+          manageUsersClient,
+          hasProbationDatasources,
+          DataProductReportableInformation(
+            id = "",
+            variantId = "",
+          ),
         ),
-      ),
-      body,
-    )
-  }
-
-  @Deprecated("Old endpoint, kept for one cycle in case of need for easy reversion")
-  @Operation(
-    description = "Saves a definition",
-    security = [SecurityRequirement(name = "bearer-jwt")],
-  )
-  @PutMapping("/definitions/{definitionId}")
-  suspend fun putDefinition(
-    @RequestBody
-    body: String,
-    @PathVariable definitionId: String,
-    httpRequest: HttpServletRequest,
-  ) {
-    // Do proper validation, which will throw if wrong. Handled in the exception handler
-    val definition = dprDefinitionGson.fromJson(body, ProductDefinition::class.java)
-    return definitionService.saveAndValidate(
-      definition,
-      httpRequest.getExecutionContext(
-        manageUsersClient,
-        hasProbationDatasources,
-        DataProductReportableInformation(
-          id = "",
-          variantId = "",
-        ),
-      ),
-      body,
-    )
+        body,
+      )
+    }
+    val status = if (definition != null) 200 else 400
+    return ResponseEntity.status(status).body(issues)
   }
 
   @Operation(
