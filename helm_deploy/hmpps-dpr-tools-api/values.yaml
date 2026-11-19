@@ -4,7 +4,7 @@ generic-service:
   replicaCount: 1
 
   image:
-    repository: quay.io/hmpps/hmpps-dpr-tools-api
+    repository: ghcr.io/ministryofjustice/hmpps-dpr-tools-api
     tag: app_version # override at deployment time
     port: 8080
 
