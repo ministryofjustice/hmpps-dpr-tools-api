@@ -225,10 +225,10 @@ class SerialisationService(
     } catch (mfe: MissingFieldException) {
       val el = json.parseToJsonElement(input)
 
-      val missingField = mfe.missingFields.single()
+      val missingField = mfe.missingFields.first()
 
-      val pathString = "\$${mfe.message?.split("$")[1]}"
-      val parentPath = parsePath(pathString)
+      val pathString = "\$${mfe.message?.split("$")?.get(1)}"
+      val parentPath = parsePath(if (pathString == "$") "" else pathString)
 
       val parentDescriptor =
         descriptorAtPath(
