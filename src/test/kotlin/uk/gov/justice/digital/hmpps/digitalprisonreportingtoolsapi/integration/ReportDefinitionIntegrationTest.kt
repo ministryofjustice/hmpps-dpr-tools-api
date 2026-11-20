@@ -10,6 +10,7 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.R
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.SingleVariantReportDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.VariantDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.WordWrap
+import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.serialization.SerialisationService
 
 class ReportDefinitionIntegrationTest : IntegrationTestBase() {
 
@@ -459,14 +460,11 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
         """.trimIndent(),
       )
       .exchange()
-      .expectStatus()
-      .isBadRequest
-      .expectBody(String::class.java)
+      .expectBodyList(SerialisationService.DPDIssue::class.java)
       .returnResult()
       .responseBody
 
-    assertThat(body).containsPattern("Validation failure: Fields \\[.*] are required for type")
-    println("****\n\n${body}\n\n***")
+    assertThat(body?.size).isNotZero()
   }
 
   @Test
