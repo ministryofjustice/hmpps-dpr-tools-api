@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.serializatio
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.MissingFieldException
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
