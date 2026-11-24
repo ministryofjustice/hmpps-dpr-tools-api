@@ -170,14 +170,22 @@ class SerialisationService(
     else -> error("Unexpected path component: ${path.first()}")
   }
 
+  /**
+   * Ensure size does not get above 50
+   */
+  fun MutableList<DPDIssue>.addIssue(issue: DPDIssue): Boolean {
+    if (size >= 50) return false
+    add(issue)
+    return true
+  }
+
   @OptIn(ExperimentalSerializationApi::class)
-  fun deserializeProductDefinition(input: String): Pair<ProductDefinition?, List<DPDIssue>> {
-    val issues = mutableListOf<DPDIssue>()
+  fun deserializeProductDefinition(input: String, issues: MutableList<DPDIssue>): Pair<ProductDefinition?, List<DPDIssue>> {
     try {
       return Pair(dprDefinitionKotlinx.decodeFromString<ProductDefinition>(input), issues)
     } catch (jde: JsonDecodingException) {
       if (jde.message.lowercase().contains("trailing comma")) {
-        issues.add(DPDIssue(jde.path!!, DPDIssueType.TRAILING_COMMA))
+        issues.addIssue(DPDIssue(jde.path!!, DPDIssueType.TRAILING_COMMA))
         return Pair(null, issues)
       }
       if (jde.message.lowercase().contains("unexpected json token")) {
@@ -196,15 +204,16 @@ class SerialisationService(
             defaultJson(descriptor),
           )
           val extraHint = jde.input
-          issues.add(DPDIssue(jde.path!!, DPDIssueType.INVALID_FIELD_VALUE, extraHint))
-          val (_, newIssues) = deserializeProductDefinition(dprDefinitionKotlinx.encodeToString(updated))
-          issues.addAll(newIssues)
+          if (!issues.addIssue(DPDIssue(jde.path!!, DPDIssueType.INVALID_FIELD_VALUE, extraHint))) {
+            return Pair(null, issues)
+          }
+          deserializeProductDefinition(dprDefinitionKotlinx.encodeToString(updated), issues)
           return Pair(null, issues)
         }
-        issues.add(DPDIssue(jde.path!!, DPDIssueType.GENERAL_SYNTAX_ERROR, jde.input))
+        issues.addIssue(DPDIssue(jde.path!!, DPDIssueType.GENERAL_SYNTAX_ERROR, jde.input))
         return Pair(null, issues)
       }
-      issues.add(DPDIssue(jde.path!!, DPDIssueType.UNKNOWN_ISSUE, jde.message))
+      issues.addIssue(DPDIssue(jde.path!!, DPDIssueType.UNKNOWN_ISSUE, jde.message))
       return Pair(null, issues)
     } catch (mfe: MissingFieldException) {
       val el = dprDefinitionKotlinx.parseToJsonElement(input)
@@ -230,9 +239,10 @@ class SerialisationService(
         parentPath + missingField,
         defaultJson(missingDescriptor),
       )
-      issues.add(DPDIssue("$pathString.$missingField", DPDIssueType.MISSING_FIELD))
-      val (_, newIssues) = deserializeProductDefinition(dprDefinitionKotlinx.encodeToString(updated))
-      issues.addAll(newIssues)
+      if (!issues.addIssue(DPDIssue("$pathString.$missingField", DPDIssueType.MISSING_FIELD))) {
+        return Pair(null, issues)
+      }
+      deserializeProductDefinition(dprDefinitionKotlinx.encodeToString(updated), issues)
     } catch (se: SerializationException) {
       val el = dprDefinitionKotlinx.parseToJsonElement(input)
 
@@ -254,9 +264,10 @@ class SerialisationService(
         extraHint = "Potential values are: " + (0 until descriptor.elementsCount)
           .map(descriptor::getElementName)
       }
-      issues.add(DPDIssue(pathString, DPDIssueType.INVALID_FIELD_VALUE, extraHint))
-      val (_, newIssues) = deserializeProductDefinition(dprDefinitionKotlinx.encodeToString(updated))
-      issues.addAll(newIssues)
+      if (!issues.addIssue(DPDIssue(pathString, DPDIssueType.INVALID_FIELD_VALUE, extraHint))) {
+        return Pair(null, issues)
+      }
+      deserializeProductDefinition(dprDefinitionKotlinx.encodeToString(updated), issues)
     } catch (other: Throwable) {
       throw other
     }

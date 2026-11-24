@@ -38,7 +38,7 @@ class DefinitionController(
     httpRequest: HttpServletRequest,
   ): ResponseEntity<List<DPDIssue>> {
     // Do proper validation, which will throw if wrong. Handled in the exception handler
-    val (definition, issues) = serialisationService.deserializeProductDefinition(body)
+    val (definition, issues) = serialisationService.deserializeProductDefinition(body, mutableListOf())
     if (definition != null) {
       definitionService.saveAndValidate(
         definition,
