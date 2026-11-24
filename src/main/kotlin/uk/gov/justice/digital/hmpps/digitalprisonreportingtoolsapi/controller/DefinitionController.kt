@@ -36,7 +36,7 @@ class DefinitionController(
     @RequestBody
     body: String,
     httpRequest: HttpServletRequest,
-  ): ResponseEntity<List<SerialisationService.DPDIssue>> {
+  ): ResponseEntity<List<DPDIssue>> {
     // Do proper validation, which will throw if wrong. Handled in the exception handler
     val (definition, issues) = serialisationService.deserializeProductDefinition(body)
     if (definition != null) {

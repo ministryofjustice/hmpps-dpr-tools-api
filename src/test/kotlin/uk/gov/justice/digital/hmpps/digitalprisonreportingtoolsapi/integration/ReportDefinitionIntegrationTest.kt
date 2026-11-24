@@ -10,7 +10,8 @@ import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.R
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.SingleVariantReportDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.VariantDefinition
 import uk.gov.justice.digital.hmpps.digitalprisonreportinglib.controller.model.WordWrap
-import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.serialization.SerialisationService
+import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.controller.DPDIssue
+import uk.gov.justice.digital.hmpps.digitalprisonreportingtoolsapi.controller.DPDIssueType
 
 class ReportDefinitionIntegrationTest : IntegrationTestBase() {
 
@@ -750,17 +751,19 @@ class ReportDefinitionIntegrationTest : IntegrationTestBase() {
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(json)
       .exchange()
-      .expectBodyList(SerialisationService.DPDIssue::class.java)
+      .expectStatus()
+      .isBadRequest
+      .expectBodyList(DPDIssue::class.java)
       .returnResult()
       .responseBody
 
     assertThat(body).containsExactlyInAnyOrder(
-      SerialisationService.DPDIssue("\$.dataset[2].datasource", SerialisationService.DPDIssueType.MISSING_FIELD, null),
-      SerialisationService.DPDIssue("\$.policy[0].rule[0].effect", SerialisationService.DPDIssueType.INVALID_FIELD_VALUE, "Potential values are: [permit, deny]"),
-      SerialisationService.DPDIssue("\$.policy[1].rule[0].effect", SerialisationService.DPDIssueType.INVALID_FIELD_VALUE, "Potential values are: [permit, deny]"),
-      SerialisationService.DPDIssue("\$.report[0].specification.field[0].sortable", SerialisationService.DPDIssueType.INVALID_FIELD_VALUE, ".....isible\":\"true\",\"sortable\":null,\"defaultsort\":true},{\"name\":\"....."),
-      SerialisationService.DPDIssue("\$.report[0].specification.field[1].sortable", SerialisationService.DPDIssueType.INVALID_FIELD_VALUE, ".....isible\":\"true\",\"sortable\":null,\"defaultsort\":false,\"filter\":....."),
-      SerialisationService.DPDIssue("\$.report[0].specification.field[2].filter.staticoptions[2].name", SerialisationService.DPDIssueType.MISSING_FIELD, null),
+      DPDIssue("\$.dataset[2].datasource", DPDIssueType.MISSING_FIELD, null),
+      DPDIssue("\$.policy[0].rule[0].effect", DPDIssueType.INVALID_FIELD_VALUE, "Potential values are: [permit, deny]"),
+      DPDIssue("\$.policy[1].rule[0].effect", DPDIssueType.INVALID_FIELD_VALUE, "Potential values are: [permit, deny]"),
+      DPDIssue("\$.report[0].specification.field[0].sortable", DPDIssueType.INVALID_FIELD_VALUE, ".....isible\":\"true\",\"sortable\":null,\"defaultsort\":true},{\"name\":\"....."),
+      DPDIssue("\$.report[0].specification.field[1].sortable", DPDIssueType.INVALID_FIELD_VALUE, ".....isible\":\"true\",\"sortable\":null,\"defaultsort\":false,\"filter\":....."),
+      DPDIssue("\$.report[0].specification.field[2].filter.staticoptions[2].name", DPDIssueType.MISSING_FIELD, null),
     )
   }
 
